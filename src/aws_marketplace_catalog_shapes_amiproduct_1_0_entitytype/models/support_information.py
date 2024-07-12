@@ -21,7 +21,6 @@ import json
 from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
-from aws_marketplace_catalog_shapes_amiproduct_1_0_entitytype.models.resource import Resource
 try:
     from typing import Self
 except ImportError:
@@ -32,8 +31,7 @@ class SupportInformation(BaseModel):
     SupportInformation
     """ # noqa: E501
     description: Optional[StrictStr] = Field(default=None, alias="Description")
-    resources: Optional[List[Resource]] = Field(default=None, alias="Resources")
-    __properties: ClassVar[List[str]] = ["Description", "Resources"]
+    __properties: ClassVar[List[str]] = ["Description"]
 
     model_config = {
         "populate_by_name": True,
@@ -71,13 +69,6 @@ class SupportInformation(BaseModel):
             },
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in resources (list)
-        _items = []
-        if self.resources:
-            for _item in self.resources:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['Resources'] = _items
         return _dict
 
     @classmethod
@@ -90,8 +81,7 @@ class SupportInformation(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "Description": obj.get("Description"),
-            "Resources": [Resource.from_dict(_item) for _item in obj.get("Resources")] if obj.get("Resources") is not None else None
+            "Description": obj.get("Description")
         })
         return _obj
 

@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    SaaSProduct_1_0_EntityType
+    ContainerProduct_1_0_EntityType
 
         Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved. 
 
@@ -21,22 +21,20 @@ import json
 from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
+from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.metadata import Metadata
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class PromotionalMedia(BaseModel):
+class OverrideParameter(BaseModel):
     """
-    PromotionalMedia
+    OverrideParameter
     """ # noqa: E501
-    type: Optional[StrictStr] = Field(default=None, alias="Type")
-    url: Optional[StrictStr] = Field(default=None, alias="Url")
-    sha256_base64: Optional[StrictStr] = Field(default=None, alias="Sha256Base64")
-    title: Optional[StrictStr] = Field(default=None, alias="Title")
-    preview: Optional[StrictStr] = Field(default=None, alias="Preview")
-    thumbnail: Optional[StrictStr] = Field(default=None, alias="Thumbnail")
-    __properties: ClassVar[List[str]] = ["Type", "Url", "Sha256Base64", "Title", "Preview", "Thumbnail"]
+    key: Optional[StrictStr] = Field(default=None, alias="Key")
+    default: Optional[StrictStr] = Field(default=None, alias="Default")
+    metadata: Optional[Metadata] = Field(default=None, alias="Metadata")
+    __properties: ClassVar[List[str]] = ["Key", "Default", "Metadata"]
 
     model_config = {
         "populate_by_name": True,
@@ -55,7 +53,7 @@ class PromotionalMedia(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of PromotionalMedia from a JSON string"""
+        """Create an instance of OverrideParameter from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,11 +72,14 @@ class PromotionalMedia(BaseModel):
             },
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of metadata
+        if self.metadata:
+            _dict['Metadata'] = self.metadata.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of PromotionalMedia from a dict"""
+        """Create an instance of OverrideParameter from a dict"""
         if obj is None:
             return None
 
@@ -86,12 +87,9 @@ class PromotionalMedia(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "Type": obj.get("Type"),
-            "Url": obj.get("Url"),
-            "Sha256Base64": obj.get("Sha256Base64"),
-            "Title": obj.get("Title"),
-            "Preview": obj.get("Preview"),
-            "Thumbnail": obj.get("Thumbnail")
+            "Key": obj.get("Key"),
+            "Default": obj.get("Default"),
+            "Metadata": Metadata.from_dict(obj.get("Metadata")) if obj.get("Metadata") is not None else None
         })
         return _obj
 

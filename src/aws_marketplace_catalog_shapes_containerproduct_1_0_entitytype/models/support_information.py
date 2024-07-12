@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    SaaSProduct_1_0_EntityType
+    ContainerProduct_1_0_EntityType
 
         Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved. 
 

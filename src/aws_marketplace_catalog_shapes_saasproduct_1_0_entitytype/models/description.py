@@ -33,17 +33,16 @@ class Description(BaseModel):
     product_title: Optional[StrictStr] = Field(default=None, alias="ProductTitle")
     product_code: Optional[StrictStr] = Field(default=None, alias="ProductCode")
     short_description: Optional[StrictStr] = Field(default=None, alias="ShortDescription")
-    manufacturer: Optional[StrictStr] = Field(default=None, alias="Manufacturer")
     long_description: Optional[StrictStr] = Field(default=None, alias="LongDescription")
     sku: Optional[StrictStr] = Field(default=None, alias="Sku")
     highlights: Optional[List[StrictStr]] = Field(default=None, alias="Highlights")
-    associated_products: Optional[List[StrictStr]] = Field(default=None, alias="AssociatedProducts")
+    associated_products: Optional[List[StrictStr]] = Field(default=None, description="This shape is deprecated: AssociatedProducts is not supported for this entity type", alias="AssociatedProducts")
     search_keywords: Optional[List[StrictStr]] = Field(default=None, alias="SearchKeywords")
     visibility: Optional[StrictStr] = Field(default=None, alias="Visibility")
-    categories: Optional[List[StrictStr]] = Field(default=None, alias="Categories")
-    replacement_product_id: Optional[StrictStr] = Field(default=None, alias="ReplacementProductId")
     product_state: Optional[StrictStr] = Field(default=None, alias="ProductState")
-    __properties: ClassVar[List[str]] = ["ProductTitle", "ProductCode", "ShortDescription", "Manufacturer", "LongDescription", "Sku", "Highlights", "AssociatedProducts", "SearchKeywords", "Visibility", "Categories", "ReplacementProductId", "ProductState"]
+    replacement_product_id: Optional[StrictStr] = Field(default=None, alias="ReplacementProductId")
+    categories: Optional[List[StrictStr]] = Field(default=None, alias="Categories")
+    __properties: ClassVar[List[str]] = ["ProductTitle", "ProductCode", "ShortDescription", "LongDescription", "Sku", "Highlights", "AssociatedProducts", "SearchKeywords", "Visibility", "ProductState", "ReplacementProductId", "Categories"]
 
     model_config = {
         "populate_by_name": True,
@@ -96,16 +95,15 @@ class Description(BaseModel):
             "ProductTitle": obj.get("ProductTitle"),
             "ProductCode": obj.get("ProductCode"),
             "ShortDescription": obj.get("ShortDescription"),
-            "Manufacturer": obj.get("Manufacturer"),
             "LongDescription": obj.get("LongDescription"),
             "Sku": obj.get("Sku"),
             "Highlights": obj.get("Highlights"),
             "AssociatedProducts": obj.get("AssociatedProducts"),
             "SearchKeywords": obj.get("SearchKeywords"),
             "Visibility": obj.get("Visibility"),
-            "Categories": obj.get("Categories"),
+            "ProductState": obj.get("ProductState"),
             "ReplacementProductId": obj.get("ReplacementProductId"),
-            "ProductState": obj.get("ProductState")
+            "Categories": obj.get("Categories")
         })
         return _obj
 

@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    SaaSProduct_1_0_EntityType
+    ContainerProduct_1_0_EntityType
 
         Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved. 
 
@@ -19,19 +19,20 @@ import json
 
 
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr
+from pydantic import BaseModel
 from pydantic import Field
+from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.positive_targeting import PositiveTargeting
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class SupportInformation(BaseModel):
+class Targeting(BaseModel):
     """
-    SupportInformation
+    Targeting
     """ # noqa: E501
-    description: Optional[StrictStr] = Field(default=None, alias="Description")
-    __properties: ClassVar[List[str]] = ["Description"]
+    positive_targeting: Optional[PositiveTargeting] = Field(default=None, alias="PositiveTargeting")
+    __properties: ClassVar[List[str]] = ["PositiveTargeting"]
 
     model_config = {
         "populate_by_name": True,
@@ -50,7 +51,7 @@ class SupportInformation(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SupportInformation from a JSON string"""
+        """Create an instance of Targeting from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +70,14 @@ class SupportInformation(BaseModel):
             },
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of positive_targeting
+        if self.positive_targeting:
+            _dict['PositiveTargeting'] = self.positive_targeting.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SupportInformation from a dict"""
+        """Create an instance of Targeting from a dict"""
         if obj is None:
             return None
 
@@ -81,7 +85,7 @@ class SupportInformation(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "Description": obj.get("Description")
+            "PositiveTargeting": PositiveTargeting.from_dict(obj.get("PositiveTargeting")) if obj.get("PositiveTargeting") is not None else None
         })
         return _obj
 

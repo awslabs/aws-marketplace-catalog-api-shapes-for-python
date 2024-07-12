@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    SaaSProduct_1_0_EntityType
+    ContainerProduct_1_0_EntityType
 
         Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved. 
 
@@ -21,21 +21,25 @@ import json
 from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
-from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.additional_resource import AdditionalResource
-from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.video import Video
+from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.delivery_option import DeliveryOption
+from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.source import Source
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class PromotionalResources(BaseModel):
+class Version(BaseModel):
     """
-    PromotionalResources
+    Version
     """ # noqa: E501
-    logo_url: Optional[StrictStr] = Field(default=None, alias="LogoUrl")
-    videos: Optional[List[Video]] = Field(default=None, alias="Videos")
-    additional_resources: Optional[List[AdditionalResource]] = Field(default=None, alias="AdditionalResources")
-    __properties: ClassVar[List[str]] = ["LogoUrl", "Videos", "AdditionalResources"]
+    id: Optional[StrictStr] = Field(default=None, alias="Id")
+    release_notes: Optional[StrictStr] = Field(default=None, alias="ReleaseNotes")
+    upgrade_instructions: Optional[StrictStr] = Field(default=None, alias="UpgradeInstructions")
+    version_title: Optional[StrictStr] = Field(default=None, alias="VersionTitle")
+    creation_date: Optional[StrictStr] = Field(default=None, alias="CreationDate")
+    sources: Optional[List[Source]] = Field(default=None, alias="Sources")
+    delivery_options: Optional[List[DeliveryOption]] = Field(default=None, alias="DeliveryOptions")
+    __properties: ClassVar[List[str]] = ["Id", "ReleaseNotes", "UpgradeInstructions", "VersionTitle", "CreationDate", "Sources", "DeliveryOptions"]
 
     model_config = {
         "populate_by_name": True,
@@ -54,7 +58,7 @@ class PromotionalResources(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of PromotionalResources from a JSON string"""
+        """Create an instance of Version from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,25 +77,25 @@ class PromotionalResources(BaseModel):
             },
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in videos (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in sources (list)
         _items = []
-        if self.videos:
-            for _item in self.videos:
+        if self.sources:
+            for _item in self.sources:
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['Videos'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in additional_resources (list)
+            _dict['Sources'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in delivery_options (list)
         _items = []
-        if self.additional_resources:
-            for _item in self.additional_resources:
+        if self.delivery_options:
+            for _item in self.delivery_options:
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['AdditionalResources'] = _items
+            _dict['DeliveryOptions'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of PromotionalResources from a dict"""
+        """Create an instance of Version from a dict"""
         if obj is None:
             return None
 
@@ -99,9 +103,13 @@ class PromotionalResources(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "LogoUrl": obj.get("LogoUrl"),
-            "Videos": [Video.from_dict(_item) for _item in obj.get("Videos")] if obj.get("Videos") is not None else None,
-            "AdditionalResources": [AdditionalResource.from_dict(_item) for _item in obj.get("AdditionalResources")] if obj.get("AdditionalResources") is not None else None
+            "Id": obj.get("Id"),
+            "ReleaseNotes": obj.get("ReleaseNotes"),
+            "UpgradeInstructions": obj.get("UpgradeInstructions"),
+            "VersionTitle": obj.get("VersionTitle"),
+            "CreationDate": obj.get("CreationDate"),
+            "Sources": [Source.from_dict(_item) for _item in obj.get("Sources")] if obj.get("Sources") is not None else None,
+            "DeliveryOptions": [DeliveryOption.from_dict(_item) for _item in obj.get("DeliveryOptions")] if obj.get("DeliveryOptions") is not None else None
         })
         return _obj
 

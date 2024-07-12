@@ -2,6 +2,7 @@ import pytest
 import json
 
 def test_importable():
+    from aws_marketplace_catalog_shapes_amiproduct_1_0_entitytype.models.ami_product_entity_detail import AmiProductEntityDetail  # noqa: F401
     from aws_marketplace_catalog_shapes_amiproduct_1_0_changetypes.models.create_product_change_detail import CreateProductChangeDetail  # noqa: F401
     from aws_marketplace_catalog_shapes_amiproduct_1_0_changetypes.models.update_delivery_options_change_detail import UpdateDeliveryOptionsChangeDetail # noqa: F401
     from aws_marketplace_catalog_shapes_amiproduct_1_0_changetypes.models.add_delivery_options_change_detail import AddDeliveryOptionsChangeDetail  # noqa: F401
@@ -118,7 +119,6 @@ def test_amiproduct_1_0_entity_detail_deserialization():
             "LongDescription": "Long product description",
             "Sku": "SKU",
             "Highlights": ["Test product"],
-            "AssociatedProducts": None,
             "SearchKeywords": ["AWS"],
             "Visibility": "Limited",
             "ProductState": "Active",
@@ -140,8 +140,7 @@ def test_amiproduct_1_0_entity_detail_deserialization():
                 "Type": "Link",
                 "Text": "Additional Resource",
                 "Url": "amazon.com"
-            }],
-            "PromotionalMedia": None
+            }]
         },
         "Dimensions": [{
             "Name": "t2.2xlarge",
@@ -243,7 +242,6 @@ def test_amiproduct_1_0_entity_detail_deserialization():
             product_title="AMI Test Product",
             product_code="9abcdefg9bw4k0zssg7thx123",
             short_description="Product description",
-            manufacturer="AWS-Tester",
             long_description="Long product description",
             sku="SKU",
             highlights=["Test product"],
@@ -468,10 +466,7 @@ def test_update_information_change_detail_serialization():
         highlights=["Highlight"],
         additional_resources=[AdditionalResource(text="url", url="https://amazon.com")],
         support_description="Support description",
-        support_resources=["[Email: support@company.com](mailto:support@company.com)",
-            "[AWS Infrastructure Support](https://aws.amazon.com/premiumsupport/)"],
         categories=["Operating Systems", "Network Infrastructure", "Application Development"],
-        associated_products=["22509f00-8f07-4a19-aacb-53fe1acb1231"],
         search_keywords=["example", "keywords"]
     )
 
@@ -489,10 +484,7 @@ def test_update_information_change_detail_serialization():
              "Url": "https://amazon.com"
          }],
          "SupportDescription": "Support description",
-         "SupportResources": ["[Email: support@company.com](mailto:support@company.com)",
-            "[AWS Infrastructure Support](https://aws.amazon.com/premiumsupport/)"],
          "Categories": ["Operating Systems", "Network Infrastructure", "Application Development"],
-         "AssociatedProducts": ["22509f00-8f07-4a19-aacb-53fe1acb1231"],
          "SearchKeywords": ["example", "keywords"]
     }
 

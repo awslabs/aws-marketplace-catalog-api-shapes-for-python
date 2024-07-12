@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    SaaSProduct_1_0_EntityType
+    ContainerProduct_1_0_EntityType
 
         Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved. 
 
@@ -26,12 +26,14 @@ try:
 except ImportError:
     from typing_extensions import Self
 
-class SupportInformation(BaseModel):
+class AdditionalResource(BaseModel):
     """
-    SupportInformation
+    AdditionalResource
     """ # noqa: E501
-    description: Optional[StrictStr] = Field(default=None, alias="Description")
-    __properties: ClassVar[List[str]] = ["Description"]
+    type: Optional[StrictStr] = Field(default=None, alias="Type")
+    text: Optional[StrictStr] = Field(default=None, alias="Text")
+    url: Optional[StrictStr] = Field(default=None, alias="Url")
+    __properties: ClassVar[List[str]] = ["Type", "Text", "Url"]
 
     model_config = {
         "populate_by_name": True,
@@ -50,7 +52,7 @@ class SupportInformation(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SupportInformation from a JSON string"""
+        """Create an instance of AdditionalResource from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,7 +75,7 @@ class SupportInformation(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SupportInformation from a dict"""
+        """Create an instance of AdditionalResource from a dict"""
         if obj is None:
             return None
 
@@ -81,7 +83,9 @@ class SupportInformation(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "Description": obj.get("Description")
+            "Type": obj.get("Type"),
+            "Text": obj.get("Text"),
+            "Url": obj.get("Url")
         })
         return _obj
 

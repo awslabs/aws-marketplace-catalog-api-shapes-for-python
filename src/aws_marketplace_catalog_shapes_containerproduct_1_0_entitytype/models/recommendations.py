@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    AmiProduct_1_0_EntityType
+    ContainerProduct_1_0_EntityType
 
         Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved. 
 
@@ -19,20 +19,20 @@ import json
 
 
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr
+from pydantic import BaseModel
 from pydantic import Field
+from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.deployment_resource import DeploymentResource
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class Resource(BaseModel):
+class Recommendations(BaseModel):
     """
-    Resource
+    Recommendations
     """ # noqa: E501
-    type: Optional[StrictStr] = Field(default=None, alias="Type")
-    value: Optional[StrictStr] = Field(default=None, alias="Value")
-    __properties: ClassVar[List[str]] = ["Type", "Value"]
+    deployment_resources: Optional[List[DeploymentResource]] = Field(default=None, alias="DeploymentResources")
+    __properties: ClassVar[List[str]] = ["DeploymentResources"]
 
     model_config = {
         "populate_by_name": True,
@@ -51,7 +51,7 @@ class Resource(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of Resource from a JSON string"""
+        """Create an instance of Recommendations from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,11 +70,18 @@ class Resource(BaseModel):
             },
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in deployment_resources (list)
+        _items = []
+        if self.deployment_resources:
+            for _item in self.deployment_resources:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['DeploymentResources'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of Resource from a dict"""
+        """Create an instance of Recommendations from a dict"""
         if obj is None:
             return None
 
@@ -82,8 +89,7 @@ class Resource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "Type": obj.get("Type"),
-            "Value": obj.get("Value")
+            "DeploymentResources": [DeploymentResource.from_dict(_item) for _item in obj.get("DeploymentResources")] if obj.get("DeploymentResources") is not None else None
         })
         return _obj
 

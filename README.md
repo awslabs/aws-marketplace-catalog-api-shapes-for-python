@@ -198,26 +198,13 @@ def update_offer_terms_example():
 You may notice that Offer has an additional appendix with specific Term types (e.g. LegalTerm, FreeTrialPricingTerm, etc.).
 These shapes are included to help you construct the corresponding change type details (e.g. UpdateLegalTerms, UpdatePricingTerms,
 etc.) with the proper fields/values if you choose to do so freehand (instead of copying from DescribeEntity results).
-There are converters included in the unit test class which will allow you to convert between a specific term (such as
+There are converters included in the utils package which will allow you to convert between a specific term (such as
 ConfigurableUpfrontPricingTerm) to the general Term that is used in the change type. Please see the unit test suite for 
 examples on how to use the converters.
 
 There is also a converter for the UpdateInformationChangeDetail change type to allow you to leverage the AcquisitionChannel
 and PricingModel enums and ensure that the values are correct.
 
-## 🚧 Preview Release Warning 🚧
-
-This codebase is currently a preview release.
-While we've done our best to ensure its functionality, there may still be unforeseen bugs and issues.
-As such, we advise against using this version in production environments or critical systems.
-
-Please note that future changes to this codebase may not be backwards compatible.
-We're actively working on improvements and updates, and while we strive to maintain compatibility where possible,
-there may be instances where changes are necessary for the overall usability of the software.
-
-We appreciate your understanding and patience as we continue to refine and enhance this project.
-If you encounter any issues or have feedback, please don't hesitate to open an issue on GitHub.
-Thank you for your interest and support!
 
 ## License
 AWS Marketplace Catalog API Shape Library for Python is licensed under the Apache 2.0 License. See LICENSE and NOTICE
