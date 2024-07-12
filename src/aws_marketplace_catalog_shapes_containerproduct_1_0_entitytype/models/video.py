@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    AmiProduct_1_0_EntityType
+    ContainerProduct_1_0_EntityType
 
         Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved. 
 
@@ -26,17 +26,14 @@ try:
 except ImportError:
     from typing_extensions import Self
 
-class PromotionalMedia(BaseModel):
+class Video(BaseModel):
     """
-    PromotionalMedia
+    Video
     """ # noqa: E501
     type: Optional[StrictStr] = Field(default=None, alias="Type")
-    url: Optional[StrictStr] = Field(default=None, alias="Url")
-    sha256_base64: Optional[StrictStr] = Field(default=None, alias="Sha256Base64")
     title: Optional[StrictStr] = Field(default=None, alias="Title")
-    preview: Optional[StrictStr] = Field(default=None, alias="Preview")
-    thumbnail: Optional[StrictStr] = Field(default=None, alias="Thumbnail")
-    __properties: ClassVar[List[str]] = ["Type", "Url", "Sha256Base64", "Title", "Preview", "Thumbnail"]
+    url: Optional[StrictStr] = Field(default=None, alias="Url")
+    __properties: ClassVar[List[str]] = ["Type", "Title", "Url"]
 
     model_config = {
         "populate_by_name": True,
@@ -55,7 +52,7 @@ class PromotionalMedia(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of PromotionalMedia from a JSON string"""
+        """Create an instance of Video from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,7 +75,7 @@ class PromotionalMedia(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of PromotionalMedia from a dict"""
+        """Create an instance of Video from a dict"""
         if obj is None:
             return None
 
@@ -87,11 +84,8 @@ class PromotionalMedia(BaseModel):
 
         _obj = cls.model_validate({
             "Type": obj.get("Type"),
-            "Url": obj.get("Url"),
-            "Sha256Base64": obj.get("Sha256Base64"),
             "Title": obj.get("Title"),
-            "Preview": obj.get("Preview"),
-            "Thumbnail": obj.get("Thumbnail")
+            "Url": obj.get("Url")
         })
         return _obj
 

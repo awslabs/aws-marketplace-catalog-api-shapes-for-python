@@ -2,6 +2,7 @@ import pytest
 import json
 
 def test_importable():
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.container_product_entity_detail import ContainerProductEntityDetail  # noqa: F401
     from aws_marketplace_catalog_shapes_containerproduct_1_0_changetypes.models.create_product_change_detail import CreateProductChangeDetail  # noqa: F401
     from aws_marketplace_catalog_shapes_containerproduct_1_0_changetypes.models.update_delivery_options_change_detail import UpdateDeliveryOptionsChangeDetail # noqa: F401
     from aws_marketplace_catalog_shapes_containerproduct_1_0_changetypes.models.add_delivery_options_change_detail import AddDeliveryOptionsChangeDetail  # noqa: F401
@@ -15,6 +16,426 @@ def test_importable():
     from aws_marketplace_catalog_shapes_containerproduct_1_0_changetypes.models.update_visibility_change_detail import UpdateVisibilityChangeDetail  # noqa: F401
 
     assert True
+
+def test_containerproduct_1_0_entity_detail_deserialization():
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.container_product_entity_detail import ContainerProductEntityDetail
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.version import Version
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.source import Source
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.source_compatibility import SourceCompatibility
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.delivery_option import DeliveryOption
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.delivery_option_compatibility import DeliveryOptionCompatibility
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.instructions import Instructions
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.recommendations import Recommendations
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.deployment_resource import DeploymentResource
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.override_parameter import OverrideParameter
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.metadata import Metadata
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.environment_override_parameter import EnvironmentOverrideParameter
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.description import Description
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.targeting import Targeting
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.positive_targeting import PositiveTargeting
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.promotional_resources import PromotionalResources
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.video import Video
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.additional_resource import AdditionalResource
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.signature_verification_key import SignatureVerificationKey
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.support_information import SupportInformation
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.dimension import Dimension
+    from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.repository import Repository
+
+    expected_json = {
+        "Versions": [{
+            "Id": "123abc02-0480-43b2-910e-6903901b9abc",
+            "ReleaseNotes": "Initial Release",
+            "UpgradeInstructions": "Upgrade instructions",
+            "VersionTitle": "2.0.1",
+            "CreationDate": "2023-03-12T00:00:00.000Z",
+            "Sources": [{
+                "Type": "DockerImages",
+                "Id": "cft85b1c-1c1b-3310-9315-a123456bcd99",
+                "Images": ["123456789123.dkr.ecr.us-east-1.amazonaws.com/placeholder:1.0"],
+                "Compatibility": {
+                    "Platform": "Linux"
+                }
+            }],
+            "DeliveryOptions": [{
+                "Id": "e28f7813-1c1b-3310-9315-a123456bcd99",
+                "Type": "ElasticContainerRegistry",
+                "SourceId": "a5c84c81-1c1b-3310-9315-a123456bcd99",
+                "Title": "DockerImageSet",
+                "ShortDescription": "Short description of product",
+                "isRecommended": False,
+                "Compatibility": {
+                    "AWSServices": ["ECS", "EKS"]
+                },
+                "Instructions": {
+                    "Usage": "Try this product on AWS ECS and AWS EKS"
+                },
+                "Recommendations": {
+                    "DeploymentResources": [{
+                        "Text": "ECS",
+                        "Url": "https://amazon.com"
+                    }]
+                },
+                "Visibility": "Limited"
+            }]
+        }, {
+            "Id": "123abc02-0480-43b2-910e-6903901b9abc",
+            "ReleaseNotes": "Initial Release",
+            "UpgradeInstructions": "Upgrade instructions",
+            "VersionTitle": "2.0.1",
+            "CreationDate": "2023-03-12T00:00:00.000Z",
+            "Sources": [{
+                "Type": "DockerImages",
+                "Id": "cft85b1c-1c1b-3310-9315-a123456bcd99",
+                "Images": ["123456789123.dkr.ecr.us-east-1.amazonaws.com/placeholder:1.0"],
+                "Compatibility": {
+                    "Platform": "Linux"
+                }
+            }, {
+                "Type": "HelmChart",
+                "Id": "b01d60d7-1c1b-3310-9315-a123456bcd99",
+                "HelmChartUri": "123456789123.dkr.ecr.us-east-1.amazonaws.com/container-seller/helm-test:my-helm"
+            }],
+            "DeliveryOptions": [{
+                "Id": "9300f934-1c1b-3310-9315-a123456bcd99",
+                "Type": "Helm",
+                "SourceId": "a5c84c81-1c1b-3310-9315-331376cc34bc",
+                "Title": "Helm delivery option title",
+                "ShortDescription": "Short description of product",
+                "isRecommended": False,
+                "Compatibility": {
+                    "AWSServices": ["EKS"]
+                },
+                "Instructions": {
+                    "Usage": "Usage instructions"
+                },
+                "QuickLaunchEnabled": False,
+                "ReleaseName": "Release Name",
+                "MarketplaceServiceAccountName": "Service account name",
+                "Namespace": "helm-namespace",
+                "OverrideParameters": [{
+                    "Key": "global.aws-region",
+                    "Default": "us-east-1",
+                    "Metadata": {
+                        "Label": "test1",
+                        "Description": "test parameter"
+                    }
+                }],
+                "Visibility": "Limited"
+            }]
+        }, {
+            "Id": "123abc02-0480-43b2-910e-6903901b9abc",
+            "ReleaseNotes": "Initial Release",
+            "UpgradeInstructions": "Upgrade instructions",
+            "VersionTitle": "2.0.1",
+            "CreationDate": "2023-03-12T00:00:00.000Z",
+            "Sources": [{
+                "Type": "DockerImages",
+                "Id": "2ad85b1c-1c1b-3310-9315-a123456bcd99",
+                "Images": ["123456789123.dkr.ecr.us-east-1.amazonaws.com/placeholder:1.0"],
+                "Compatibility": {
+                    "Platform": "Linux"
+                }
+            }, {
+                "Type": "HelmChart",
+                "Id": "b01d60d7-1c1b-3310-9315-a123456bcd99",
+                "HelmChartUri": "123456789123.dkr.ecr.us-east-1.amazonaws.com/container-seller/helm-test:my-helm"
+            }],
+            "DeliveryOptions": [{
+                "Id": "16182cde-1c1b-3310-9315-a123456bcd99",
+                "Type": "EksAddOn",
+                "SourceId": "a5c84c81-1c1b-3310-9315-331376cc34bc",
+                "Title": "EKS AddOn title",
+                "ShortDescription": "Short description of product",
+                "Compatibility": {
+                    "KubernetesVersions": ["1.22", "1.23"],
+                    "Architectures": ["amd64", "arm64"]
+                },
+                "Instructions": {
+                    "Usage": "Usage instructions"
+                },
+                "AddOnType": "gitops",
+                "Visibility": "Limited",
+                "Namespace": "eks-namespace",
+                "EnvironmentOverrideParameters": [{
+                    "Key": "global.aws-region",
+                    "Value": "cluster_name"
+                }],
+                "DisplayAddOnName": "display-name",
+                "AddOnName": "name",
+                "DisplayAddOnVersion": "v1.2.1-eksbuild.1",
+                "AddOnVersion": "1.2.1"
+            }]
+        }],
+        "Description": {
+            "ProductTitle": "Container Test Product",
+            "ProductCode": "9abcdefg9bw4k0zssg7thx123",
+            "ShortDescription": "Product description",
+            "LongDescription": "Long product description",
+            "Sku": "SKU",
+            "Highlights": ["Test product"],
+            "SearchKeywords": ["AWS"],
+            "Visibility": "Limited",
+            "ProductState": "Active",
+            "Categories": ["Operating Systems"]
+        },
+        "Targeting": {
+            "PositiveTargeting": {
+                "BuyerAccounts": ["123456789123"]
+            }
+        },
+        "PromotionalResources": {
+            "LogoUrl": "https://s3.amazonaws.com/awsmp-logos/logo.png",
+            "Videos": [{
+                "Type": "Link",
+                "Title": "Product Video",
+                "Url": "https://s3.amazonaws.com/media/video.mp4"
+            }],
+            "AdditionalResources": [{
+                "Type": "Link",
+                "Text": "Additional Resource",
+                "Url": "amazon.com"
+            }]
+        },
+        "SignatureVerificationKeys": [{
+            "PublicKey": "-----BEGIN PUBLIC KEY-----\\nPublicKeyExample\\n-----END PUBLIC KEY-----\\n",
+            "Status": "Active",
+            "PublicKeyVersion": 1
+        }],
+        "SupportInformation": {
+            "Description": "Product support information"
+        },
+        "Dimensions": [{
+            "Name": "Dimension 1",
+            "Description": "description",
+            "Key": "dimension1",
+            "Unit": "bit",
+            "Types": ["Metered"]
+        }],
+        "Repositories": [{
+            "Url": "123456789123.dkr.ecr.us-east-1.amazonaws.com/test-repository-1",
+            "Type": "ECR"
+        }, {
+            "Url": "123456789123.dkr.ecr.us-east-1.amazonaws.com/test-repository-2",
+            "Type": "ECR"
+        }]
+    }
+
+    actual_detail = ContainerProductEntityDetail.from_json(json.dumps(expected_json))
+    expected_detail = ContainerProductEntityDetail(
+        versions=[
+            Version(
+                id="123abc02-0480-43b2-910e-6903901b9abc",
+                release_notes="Initial Release",
+                upgrade_instructions="Upgrade instructions",
+                version_title="2.0.1",
+                creation_date="2023-03-12T00:00:00.000Z",
+                sources=[
+                    Source(
+                        type="DockerImages",
+                        id="cft85b1c-1c1b-3310-9315-a123456bcd99",
+                        images=["123456789123.dkr.ecr.us-east-1.amazonaws.com/placeholder:1.0"],
+                        compatibility=SourceCompatibility(
+                            platform="Linux"
+                        )
+                    )
+                ],
+                delivery_options=[
+                    DeliveryOption(
+                        id="e28f7813-1c1b-3310-9315-a123456bcd99",
+                        type="ElasticContainerRegistry",
+                        source_id="a5c84c81-1c1b-3310-9315-a123456bcd99",
+                        title="DockerImageSet",
+                        short_description="Short description of product",
+                        is_recommended=False,
+                        compatibility=DeliveryOptionCompatibility(
+                            aws_services=["ECS", "EKS"]
+                        ),
+                        instructions=Instructions(
+                            usage="Try this product on AWS ECS and AWS EKS"
+                        ),
+                        recommendations=Recommendations(
+                            deployment_resources=[
+                                DeploymentResource(
+                                    text="ECS",
+                                    url="https://amazon.com"
+                                )
+                            ]
+                        ),
+                        visibility="Limited"
+                    )
+                ]
+            ),
+            Version(
+                id="123abc02-0480-43b2-910e-6903901b9abc",
+                release_notes="Initial Release",
+                upgrade_instructions="Upgrade instructions",
+                version_title="2.0.1",
+                creation_date="2023-03-12T00:00:00.000Z",
+                sources=[
+                    Source(
+                        type="DockerImages",
+                        id="cft85b1c-1c1b-3310-9315-a123456bcd99",
+                        images=["123456789123.dkr.ecr.us-east-1.amazonaws.com/placeholder:1.0"],
+                        compatibility=SourceCompatibility(
+                            platform="Linux"
+                        )
+                    ),
+                    Source(
+                        type="HelmChart",
+                        id="b01d60d7-1c1b-3310-9315-a123456bcd99",
+                        helm_chart_uri="123456789123.dkr.ecr.us-east-1.amazonaws.com/container-seller/helm-test:my-helm"
+                    )
+                ],
+                delivery_options=[
+                    DeliveryOption(
+                        id="9300f934-1c1b-3310-9315-a123456bcd99",
+                        type="Helm",
+                        source_id="a5c84c81-1c1b-3310-9315-331376cc34bc",
+                        title="Helm delivery option title",
+                        short_description="Short description of product",
+                        is_recommended=False,
+                        compatibility=DeliveryOptionCompatibility(
+                            aws_services=["EKS"]
+                        ),
+                        instructions=Instructions(
+                            usage="Usage instructions"
+                        ),
+                        quick_launch_enabled=False,
+                        release_name="Release Name",
+                        marketplace_service_account_name="Service account name",
+                        namespace="helm-namespace",
+                        override_parameters=[
+                            OverrideParameter(
+                                key="global.aws-region",
+                                default="us-east-1",
+                                metadata=Metadata(
+                                    label="test1",
+                                    description="test parameter"
+                                )
+                            )
+                        ],
+                        visibility="Limited"
+                    )
+                ]
+            ),
+            Version(
+                id="123abc02-0480-43b2-910e-6903901b9abc",
+                release_notes="Initial Release",
+                upgrade_instructions="Upgrade instructions",
+                version_title="2.0.1",
+                creation_date="2023-03-12T00:00:00.000Z",
+                sources=[
+                    Source(
+                        type="DockerImages",
+                        id="2ad85b1c-1c1b-3310-9315-a123456bcd99",
+                        images=["123456789123.dkr.ecr.us-east-1.amazonaws.com/placeholder:1.0"],
+                        compatibility=SourceCompatibility(
+                            platform="Linux"
+                        )
+                    ),
+                    Source(
+                        type="HelmChart",
+                        id="b01d60d7-1c1b-3310-9315-a123456bcd99",
+                        helm_chart_uri="123456789123.dkr.ecr.us-east-1.amazonaws.com/container-seller/helm-test:my-helm"
+                    )
+                ],
+                delivery_options=[
+                    DeliveryOption(
+                        id="16182cde-1c1b-3310-9315-a123456bcd99",
+                        type="EksAddOn",
+                        source_id="a5c84c81-1c1b-3310-9315-331376cc34bc",
+                        title="EKS AddOn title",
+                        short_description="Short description of product",
+                        compatibility=DeliveryOptionCompatibility(
+                            kubernetes_versions=["1.22", "1.23"],
+                            architectures=["amd64", "arm64"]
+                        ),
+                        instructions=Instructions(
+                            usage="Usage instructions"
+                        ),
+                        add_on_type="gitops",
+                        visibility="Limited",
+                        namespace="eks-namespace",
+                        environment_override_parameters=[
+                            EnvironmentOverrideParameter(
+                                key="global.aws-region",
+                                value="cluster_name"
+                            )
+                        ],
+                        display_add_on_name="display-name",
+                        add_on_name="name",
+                        display_add_on_version="v1.2.1-eksbuild.1",
+                        add_on_version="1.2.1"
+                    )
+                ]
+            )
+        ],
+        description=Description(
+            product_title="Container Test Product",
+            product_code="9abcdefg9bw4k0zssg7thx123",
+            short_description="Product description",
+            long_description="Long product description",
+            sku="SKU",
+            highlights=["Test product"],
+            search_keywords=["AWS"],
+            visibility="Limited",
+            product_state="Active",
+            categories=["Operating Systems"]
+        ),
+        targeting=Targeting(
+            positive_targeting=PositiveTargeting(
+                buyer_accounts=["123456789123"]
+            )
+        ),
+        promotional_resources=PromotionalResources(
+            logo_url="https://s3.amazonaws.com/awsmp-logos/logo.png",
+            videos=[
+                Video(
+                    type="Link",
+                    title="Product Video",
+                    url="https://s3.amazonaws.com/media/video.mp4"
+                )
+            ],
+            additional_resources=[
+                AdditionalResource(
+                    type="Link",
+                    text="Additional Resource",
+                    url="amazon.com"
+                )
+            ]
+        ),
+        signature_verification_keys=[
+            SignatureVerificationKey(
+                public_key="-----BEGIN PUBLIC KEY-----\\nPublicKeyExample\\n-----END PUBLIC KEY-----\\n",
+                status="Active",
+                public_key_version=1
+            )
+        ],
+        support_information=SupportInformation(
+            description="Product support information"
+        ),
+        dimensions=[
+            Dimension(
+                name="Dimension 1",
+                description="description",
+                key="dimension1",
+                unit="bit",
+                types=["Metered"]
+            )
+        ],
+        repositories=[
+            Repository(
+                url="123456789123.dkr.ecr.us-east-1.amazonaws.com/test-repository-1",
+                type="ECR"
+            ),
+            Repository(
+                url="123456789123.dkr.ecr.us-east-1.amazonaws.com/test-repository-2",
+                type="ECR"
+            )
+        ]
+    )
+
+    assert actual_detail == expected_detail, "Deserialized object does not match expected object"
 
 def test_create_product_change_detail_serialization():
     from aws_marketplace_catalog_shapes_containerproduct_1_0_changetypes.models.create_product_change_detail import CreateProductChangeDetail
@@ -472,7 +893,6 @@ def test_update_information_change_detail_serialization():
         support_resources=["[Email: support@company.com](mailto:support@company.com)",
                            "[AWS Infrastructure Support](https://aws.amazon.com/premiumsupport/)"],
         categories=["Operating Systems", "Network Infrastructure", "Application Development"],
-        associated_products=["22509f00-8f07-4a19-aacb-53fe1acb1231"],
         search_keywords=["example", "keywords"]
     )
 
@@ -490,10 +910,7 @@ def test_update_information_change_detail_serialization():
             "Url": "https://amazon.com"
         }],
         "SupportDescription": "Support description",
-        "SupportResources": ["[Email: support@company.com](mailto:support@company.com)",
-                             "[AWS Infrastructure Support](https://aws.amazon.com/premiumsupport/)"],
         "Categories": ["Operating Systems", "Network Infrastructure", "Application Development"],
-        "AssociatedProducts": ["22509f00-8f07-4a19-aacb-53fe1acb1231"],
         "SearchKeywords": ["example", "keywords"]
     }
 

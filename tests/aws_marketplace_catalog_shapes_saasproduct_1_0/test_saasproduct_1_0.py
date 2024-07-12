@@ -35,11 +35,9 @@ def test_saas_product_1_0_entity_detail_deserialization():
             "ProductTitle": "Test Product",
             "ProductCode": "5cqs4jta6m2iuh6jak7s7bjsy",
             "ShortDescription": "Test Product",
-            "Manufacturer": "SaaS seller name",
             "LongDescription": "SaaS test product",
             "Sku": "SKU",
             "Highlights": ["Config adds no run-time overheads"],
-            "AssociatedProducts": None,
             "SearchKeywords": ["example", "keywords"],
             "Visibility": "Restricted",
             "ReplacementProductId": "prod-1234567890123",
@@ -57,8 +55,7 @@ def test_saas_product_1_0_entity_detail_deserialization():
                 "Type": "Link",
                 "Text": "Sample Resource",
                 "Url": "https://amazon.com"
-            }],
-            "PromotionalMedia": None
+            }]
         },
         "SupportInformation": {
             "Description": "Product support information"
@@ -136,7 +133,6 @@ def test_saas_product_1_0_entity_detail_deserialization():
             product_title="Test Product",
             product_code="5cqs4jta6m2iuh6jak7s7bjsy",
             short_description="Test Product",
-            manufacturer="SaaS seller name",
             long_description="SaaS test product",
             highlights=["Config adds no run-time overheads"],
             search_keywords=["example", "keywords"],
@@ -259,7 +255,6 @@ def test_update_information_change_detail_serialization():
         additional_resources=[AdditionalResource(text="url", url="https://amazon.com")],
         support_description="Support description",
         categories=["Operating Systems", "Network Infrastructure", "Application Development"],
-        associated_products=["22509f00-8f07-4a19-aacb-53fe1acb1231"],
         search_keywords=["example", "keywords"]
     )
 
@@ -278,7 +273,6 @@ def test_update_information_change_detail_serialization():
          }],
          "SupportDescription": "Support description",
          "Categories": ["Operating Systems", "Network Infrastructure", "Application Development"],
-         "AssociatedProducts": ["22509f00-8f07-4a19-aacb-53fe1acb1231"],
          "SearchKeywords": ["example", "keywords"]
     }
 

@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    SaaSProduct_1_0_EntityType
+    ContainerProduct_1_0_EntityType
 
         Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved. 
 
@@ -19,19 +19,21 @@ import json
 
 
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr
+from pydantic import BaseModel, StrictInt, StrictStr
 from pydantic import Field
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-class SupportInformation(BaseModel):
+class SignatureVerificationKey(BaseModel):
     """
-    SupportInformation
+    SignatureVerificationKey
     """ # noqa: E501
-    description: Optional[StrictStr] = Field(default=None, alias="Description")
-    __properties: ClassVar[List[str]] = ["Description"]
+    public_key: Optional[StrictStr] = Field(default=None, alias="PublicKey")
+    status: Optional[StrictStr] = Field(default=None, alias="Status")
+    public_key_version: Optional[StrictInt] = Field(default=None, alias="PublicKeyVersion")
+    __properties: ClassVar[List[str]] = ["PublicKey", "Status", "PublicKeyVersion"]
 
     model_config = {
         "populate_by_name": True,
@@ -50,7 +52,7 @@ class SupportInformation(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SupportInformation from a JSON string"""
+        """Create an instance of SignatureVerificationKey from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,7 +75,7 @@ class SupportInformation(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SupportInformation from a dict"""
+        """Create an instance of SignatureVerificationKey from a dict"""
         if obj is None:
             return None
 
@@ -81,7 +83,9 @@ class SupportInformation(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "Description": obj.get("Description")
+            "PublicKey": obj.get("PublicKey"),
+            "Status": obj.get("Status"),
+            "PublicKeyVersion": obj.get("PublicKeyVersion")
         })
         return _obj
 

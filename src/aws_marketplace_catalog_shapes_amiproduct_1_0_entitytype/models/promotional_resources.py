@@ -22,7 +22,6 @@ from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
 from aws_marketplace_catalog_shapes_amiproduct_1_0_entitytype.models.additional_resource import AdditionalResource
-from aws_marketplace_catalog_shapes_amiproduct_1_0_entitytype.models.promotional_media import PromotionalMedia
 from aws_marketplace_catalog_shapes_amiproduct_1_0_entitytype.models.video import Video
 try:
     from typing import Self
@@ -36,8 +35,7 @@ class PromotionalResources(BaseModel):
     logo_url: Optional[StrictStr] = Field(default=None, alias="LogoUrl")
     videos: Optional[List[Video]] = Field(default=None, alias="Videos")
     additional_resources: Optional[List[AdditionalResource]] = Field(default=None, alias="AdditionalResources")
-    promotional_media: Optional[List[PromotionalMedia]] = Field(default=None, alias="PromotionalMedia")
-    __properties: ClassVar[List[str]] = ["LogoUrl", "Videos", "AdditionalResources", "PromotionalMedia"]
+    __properties: ClassVar[List[str]] = ["LogoUrl", "Videos", "AdditionalResources"]
 
     model_config = {
         "populate_by_name": True,
@@ -89,13 +87,6 @@ class PromotionalResources(BaseModel):
                 if _item:
                     _items.append(_item.to_dict())
             _dict['AdditionalResources'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in promotional_media (list)
-        _items = []
-        if self.promotional_media:
-            for _item in self.promotional_media:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['PromotionalMedia'] = _items
         return _dict
 
     @classmethod
@@ -110,8 +101,7 @@ class PromotionalResources(BaseModel):
         _obj = cls.model_validate({
             "LogoUrl": obj.get("LogoUrl"),
             "Videos": [Video.from_dict(_item) for _item in obj.get("Videos")] if obj.get("Videos") is not None else None,
-            "AdditionalResources": [AdditionalResource.from_dict(_item) for _item in obj.get("AdditionalResources")] if obj.get("AdditionalResources") is not None else None,
-            "PromotionalMedia": [PromotionalMedia.from_dict(_item) for _item in obj.get("PromotionalMedia")] if obj.get("PromotionalMedia") is not None else None
+            "AdditionalResources": [AdditionalResource.from_dict(_item) for _item in obj.get("AdditionalResources")] if obj.get("AdditionalResources") is not None else None
         })
         return _obj
 

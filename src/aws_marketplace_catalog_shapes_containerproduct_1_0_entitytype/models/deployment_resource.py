@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    SaaSProduct_1_0_EntityType
+    ContainerProduct_1_0_EntityType
 
         Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved. 
 
@@ -26,13 +26,13 @@ try:
 except ImportError:
     from typing_extensions import Self
 
-class Resource(BaseModel):
+class DeploymentResource(BaseModel):
     """
-    Resource
+    DeploymentResource
     """ # noqa: E501
-    type: Optional[StrictStr] = Field(default=None, alias="Type")
-    value: Optional[StrictStr] = Field(default=None, alias="Value")
-    __properties: ClassVar[List[str]] = ["Type", "Value"]
+    text: Optional[StrictStr] = Field(default=None, alias="Text")
+    url: Optional[StrictStr] = Field(default=None, alias="Url")
+    __properties: ClassVar[List[str]] = ["Text", "Url"]
 
     model_config = {
         "populate_by_name": True,
@@ -51,7 +51,7 @@ class Resource(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of Resource from a JSON string"""
+        """Create an instance of DeploymentResource from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,7 +74,7 @@ class Resource(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of Resource from a dict"""
+        """Create an instance of DeploymentResource from a dict"""
         if obj is None:
             return None
 
@@ -82,8 +82,8 @@ class Resource(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "Type": obj.get("Type"),
-            "Value": obj.get("Value")
+            "Text": obj.get("Text"),
+            "Url": obj.get("Url")
         })
         return _obj
 
