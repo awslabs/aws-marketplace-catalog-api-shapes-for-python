@@ -17,19 +17,15 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr
-from pydantic import Field
 from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.dimension import Dimension
 from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.offer_details import OfferDetails
 from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.pre_existing_buyer_agreement import PreExistingBuyerAgreement
 from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.rule import Rule
 from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.term import Term
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class ResaleAuthorizationEntityDetail(BaseModel):
     """
@@ -50,10 +46,11 @@ class ResaleAuthorizationEntityDetail(BaseModel):
     manufacturer_account_id: Optional[StrictStr] = Field(default=None, alias="ManufacturerAccountId")
     __properties: ClassVar[List[str]] = ["Name", "Description", "ProductId", "ProductName", "Status", "PreExistingBuyerAgreement", "Dimensions", "OfferDetails", "Terms", "Rules", "CreatedDate", "ManufacturerLegalName", "ManufacturerAccountId"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -66,7 +63,7 @@ class ResaleAuthorizationEntityDetail(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of ResaleAuthorizationEntityDetail from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -80,10 +77,12 @@ class ResaleAuthorizationEntityDetail(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of pre_existing_buyer_agreement
@@ -92,9 +91,9 @@ class ResaleAuthorizationEntityDetail(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in dimensions (list)
         _items = []
         if self.dimensions:
-            for _item in self.dimensions:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_dimensions in self.dimensions:
+                if _item_dimensions:
+                    _items.append(_item_dimensions.to_dict())
             _dict['Dimensions'] = _items
         # override the default output from pydantic by calling `to_dict()` of offer_details
         if self.offer_details:
@@ -102,21 +101,21 @@ class ResaleAuthorizationEntityDetail(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in terms (list)
         _items = []
         if self.terms:
-            for _item in self.terms:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_terms in self.terms:
+                if _item_terms:
+                    _items.append(_item_terms.to_dict())
             _dict['Terms'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in rules (list)
         _items = []
         if self.rules:
-            for _item in self.rules:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_rules in self.rules:
+                if _item_rules:
+                    _items.append(_item_rules.to_dict())
             _dict['Rules'] = _items
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of ResaleAuthorizationEntityDetail from a dict"""
         if obj is None:
             return None
@@ -130,11 +129,11 @@ class ResaleAuthorizationEntityDetail(BaseModel):
             "ProductId": obj.get("ProductId"),
             "ProductName": obj.get("ProductName"),
             "Status": obj.get("Status"),
-            "PreExistingBuyerAgreement": PreExistingBuyerAgreement.from_dict(obj.get("PreExistingBuyerAgreement")) if obj.get("PreExistingBuyerAgreement") is not None else None,
-            "Dimensions": [Dimension.from_dict(_item) for _item in obj.get("Dimensions")] if obj.get("Dimensions") is not None else None,
-            "OfferDetails": OfferDetails.from_dict(obj.get("OfferDetails")) if obj.get("OfferDetails") is not None else None,
-            "Terms": [Term.from_dict(_item) for _item in obj.get("Terms")] if obj.get("Terms") is not None else None,
-            "Rules": [Rule.from_dict(_item) for _item in obj.get("Rules")] if obj.get("Rules") is not None else None,
+            "PreExistingBuyerAgreement": PreExistingBuyerAgreement.from_dict(obj["PreExistingBuyerAgreement"]) if obj.get("PreExistingBuyerAgreement") is not None else None,
+            "Dimensions": [Dimension.from_dict(_item) for _item in obj["Dimensions"]] if obj.get("Dimensions") is not None else None,
+            "OfferDetails": OfferDetails.from_dict(obj["OfferDetails"]) if obj.get("OfferDetails") is not None else None,
+            "Terms": [Term.from_dict(_item) for _item in obj["Terms"]] if obj.get("Terms") is not None else None,
+            "Rules": [Rule.from_dict(_item) for _item in obj["Rules"]] if obj.get("Rules") is not None else None,
             "CreatedDate": obj.get("CreatedDate"),
             "ManufacturerLegalName": obj.get("ManufacturerLegalName"),
             "ManufacturerAccountId": obj.get("ManufacturerAccountId")

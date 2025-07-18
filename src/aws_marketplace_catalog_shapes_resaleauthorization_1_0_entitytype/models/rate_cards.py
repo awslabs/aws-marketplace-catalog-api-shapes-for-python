@@ -17,17 +17,13 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel
-from pydantic import Field
 from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.constraints import Constraints
 from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.rate_card import RateCard
 from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.selector import Selector
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class RateCards(BaseModel):
     """
@@ -38,10 +34,11 @@ class RateCards(BaseModel):
     constraints: Optional[Constraints] = Field(default=None, alias="Constraints")
     __properties: ClassVar[List[str]] = ["Selector", "RateCard", "Constraints"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -54,7 +51,7 @@ class RateCards(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of RateCards from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -68,10 +65,12 @@ class RateCards(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of selector
@@ -80,9 +79,9 @@ class RateCards(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in rate_card (list)
         _items = []
         if self.rate_card:
-            for _item in self.rate_card:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_rate_card in self.rate_card:
+                if _item_rate_card:
+                    _items.append(_item_rate_card.to_dict())
             _dict['RateCard'] = _items
         # override the default output from pydantic by calling `to_dict()` of constraints
         if self.constraints:
@@ -90,7 +89,7 @@ class RateCards(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of RateCards from a dict"""
         if obj is None:
             return None
@@ -99,9 +98,9 @@ class RateCards(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "Selector": Selector.from_dict(obj.get("Selector")) if obj.get("Selector") is not None else None,
-            "RateCard": [RateCard.from_dict(_item) for _item in obj.get("RateCard")] if obj.get("RateCard") is not None else None,
-            "Constraints": Constraints.from_dict(obj.get("Constraints")) if obj.get("Constraints") is not None else None
+            "Selector": Selector.from_dict(obj["Selector"]) if obj.get("Selector") is not None else None,
+            "RateCard": [RateCard.from_dict(_item) for _item in obj["RateCard"]] if obj.get("RateCard") is not None else None,
+            "Constraints": Constraints.from_dict(obj["Constraints"]) if obj.get("Constraints") is not None else None
         })
         return _obj
 

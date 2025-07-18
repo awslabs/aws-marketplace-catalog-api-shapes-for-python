@@ -17,10 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel
-from pydantic import Field
 from aws_marketplace_catalog_shapes_amiproduct_1_0_entitytype.models.compatibility import Compatibility
 from aws_marketplace_catalog_shapes_amiproduct_1_0_entitytype.models.description import Description
 from aws_marketplace_catalog_shapes_amiproduct_1_0_entitytype.models.dimension import Dimension
@@ -29,10 +27,8 @@ from aws_marketplace_catalog_shapes_amiproduct_1_0_entitytype.models.region_avai
 from aws_marketplace_catalog_shapes_amiproduct_1_0_entitytype.models.support_information import SupportInformation
 from aws_marketplace_catalog_shapes_amiproduct_1_0_entitytype.models.targeting import Targeting
 from aws_marketplace_catalog_shapes_amiproduct_1_0_entitytype.models.version import Version
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class AmiProductEntityDetail(BaseModel):
     """
@@ -48,10 +44,11 @@ class AmiProductEntityDetail(BaseModel):
     compatibility: Optional[Compatibility] = Field(default=None, alias="Compatibility")
     __properties: ClassVar[List[str]] = ["Versions", "Description", "PromotionalResources", "RegionAvailability", "SupportInformation", "Dimensions", "Targeting", "Compatibility"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -64,7 +61,7 @@ class AmiProductEntityDetail(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of AmiProductEntityDetail from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -78,18 +75,20 @@ class AmiProductEntityDetail(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in versions (list)
         _items = []
         if self.versions:
-            for _item in self.versions:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_versions in self.versions:
+                if _item_versions:
+                    _items.append(_item_versions.to_dict())
             _dict['Versions'] = _items
         # override the default output from pydantic by calling `to_dict()` of description
         if self.description:
@@ -106,9 +105,9 @@ class AmiProductEntityDetail(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in dimensions (list)
         _items = []
         if self.dimensions:
-            for _item in self.dimensions:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_dimensions in self.dimensions:
+                if _item_dimensions:
+                    _items.append(_item_dimensions.to_dict())
             _dict['Dimensions'] = _items
         # override the default output from pydantic by calling `to_dict()` of targeting
         if self.targeting:
@@ -119,7 +118,7 @@ class AmiProductEntityDetail(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of AmiProductEntityDetail from a dict"""
         if obj is None:
             return None
@@ -128,14 +127,14 @@ class AmiProductEntityDetail(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "Versions": [Version.from_dict(_item) for _item in obj.get("Versions")] if obj.get("Versions") is not None else None,
-            "Description": Description.from_dict(obj.get("Description")) if obj.get("Description") is not None else None,
-            "PromotionalResources": PromotionalResources.from_dict(obj.get("PromotionalResources")) if obj.get("PromotionalResources") is not None else None,
-            "RegionAvailability": RegionAvailability.from_dict(obj.get("RegionAvailability")) if obj.get("RegionAvailability") is not None else None,
-            "SupportInformation": SupportInformation.from_dict(obj.get("SupportInformation")) if obj.get("SupportInformation") is not None else None,
-            "Dimensions": [Dimension.from_dict(_item) for _item in obj.get("Dimensions")] if obj.get("Dimensions") is not None else None,
-            "Targeting": Targeting.from_dict(obj.get("Targeting")) if obj.get("Targeting") is not None else None,
-            "Compatibility": Compatibility.from_dict(obj.get("Compatibility")) if obj.get("Compatibility") is not None else None
+            "Versions": [Version.from_dict(_item) for _item in obj["Versions"]] if obj.get("Versions") is not None else None,
+            "Description": Description.from_dict(obj["Description"]) if obj.get("Description") is not None else None,
+            "PromotionalResources": PromotionalResources.from_dict(obj["PromotionalResources"]) if obj.get("PromotionalResources") is not None else None,
+            "RegionAvailability": RegionAvailability.from_dict(obj["RegionAvailability"]) if obj.get("RegionAvailability") is not None else None,
+            "SupportInformation": SupportInformation.from_dict(obj["SupportInformation"]) if obj.get("SupportInformation") is not None else None,
+            "Dimensions": [Dimension.from_dict(_item) for _item in obj["Dimensions"]] if obj.get("Dimensions") is not None else None,
+            "Targeting": Targeting.from_dict(obj["Targeting"]) if obj.get("Targeting") is not None else None,
+            "Compatibility": Compatibility.from_dict(obj["Compatibility"]) if obj.get("Compatibility") is not None else None
         })
         return _obj
 

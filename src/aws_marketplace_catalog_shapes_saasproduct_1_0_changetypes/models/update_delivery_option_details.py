@@ -17,15 +17,11 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel
-from pydantic import Field
 from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.update_saa_s_url_delivery_option_details import UpdateSaaSUrlDeliveryOptionDetails
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class UpdateDeliveryOptionDetails(BaseModel):
     """
@@ -34,10 +30,11 @@ class UpdateDeliveryOptionDetails(BaseModel):
     saa_s_url_delivery_option_details: Optional[UpdateSaaSUrlDeliveryOptionDetails] = Field(default=None, alias="SaaSUrlDeliveryOptionDetails")
     __properties: ClassVar[List[str]] = ["SaaSUrlDeliveryOptionDetails"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -50,7 +47,7 @@ class UpdateDeliveryOptionDetails(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of UpdateDeliveryOptionDetails from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -64,10 +61,12 @@ class UpdateDeliveryOptionDetails(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of saa_s_url_delivery_option_details
@@ -76,7 +75,7 @@ class UpdateDeliveryOptionDetails(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of UpdateDeliveryOptionDetails from a dict"""
         if obj is None:
             return None
@@ -85,7 +84,7 @@ class UpdateDeliveryOptionDetails(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "SaaSUrlDeliveryOptionDetails": UpdateSaaSUrlDeliveryOptionDetails.from_dict(obj.get("SaaSUrlDeliveryOptionDetails")) if obj.get("SaaSUrlDeliveryOptionDetails") is not None else None
+            "SaaSUrlDeliveryOptionDetails": UpdateSaaSUrlDeliveryOptionDetails.from_dict(obj["SaaSUrlDeliveryOptionDetails"]) if obj.get("SaaSUrlDeliveryOptionDetails") is not None else None
         })
         return _obj
 

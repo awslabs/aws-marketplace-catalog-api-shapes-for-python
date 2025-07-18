@@ -17,10 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel
-from pydantic import Field
 from aws_marketplace_catalog_shapes_offer_1_0_appendix.models.byol_pricing_term import ByolPricingTerm
 from aws_marketplace_catalog_shapes_offer_1_0_appendix.models.configurable_upfront_pricing_term import ConfigurableUpfrontPricingTerm
 from aws_marketplace_catalog_shapes_offer_1_0_appendix.models.customer_verification_term import CustomerVerificationTerm
@@ -35,10 +33,8 @@ from aws_marketplace_catalog_shapes_offer_1_0_appendix.models.update_information
 from aws_marketplace_catalog_shapes_offer_1_0_appendix.models.update_targeting_change_detail import UpdateTargetingChangeDetail
 from aws_marketplace_catalog_shapes_offer_1_0_appendix.models.usage_based_pricing_term import UsageBasedPricingTerm
 from aws_marketplace_catalog_shapes_offer_1_0_appendix.models.validity_term import ValidityTerm
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class ExportAppendixInput(BaseModel):
     """
@@ -60,10 +56,11 @@ class ExportAppendixInput(BaseModel):
     update_targeting_change_detail: Optional[UpdateTargetingChangeDetail] = Field(default=None, alias="UpdateTargetingChangeDetail")
     __properties: ClassVar[List[str]] = ["CustomerVerificationTerm", "LegalTerm", "PaymentScheduleTerm", "ByolPricingTerm", "FreeTrialPricingTerm", "UsageBasedPricingTerm", "ConfigurableUpfrontPricingTerm", "RecurringPaymentTerm", "FixedUpfrontPricingTerm", "SupportTerm", "RenewalTerm", "ValidityTerm", "UpdateInformationChangeDetail", "UpdateTargetingChangeDetail"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -76,7 +73,7 @@ class ExportAppendixInput(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of ExportAppendixInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -90,10 +87,12 @@ class ExportAppendixInput(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of customer_verification_term
@@ -141,7 +140,7 @@ class ExportAppendixInput(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of ExportAppendixInput from a dict"""
         if obj is None:
             return None
@@ -150,20 +149,20 @@ class ExportAppendixInput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "CustomerVerificationTerm": CustomerVerificationTerm.from_dict(obj.get("CustomerVerificationTerm")) if obj.get("CustomerVerificationTerm") is not None else None,
-            "LegalTerm": LegalTerm.from_dict(obj.get("LegalTerm")) if obj.get("LegalTerm") is not None else None,
-            "PaymentScheduleTerm": PaymentScheduleTerm.from_dict(obj.get("PaymentScheduleTerm")) if obj.get("PaymentScheduleTerm") is not None else None,
-            "ByolPricingTerm": ByolPricingTerm.from_dict(obj.get("ByolPricingTerm")) if obj.get("ByolPricingTerm") is not None else None,
-            "FreeTrialPricingTerm": FreeTrialPricingTerm.from_dict(obj.get("FreeTrialPricingTerm")) if obj.get("FreeTrialPricingTerm") is not None else None,
-            "UsageBasedPricingTerm": UsageBasedPricingTerm.from_dict(obj.get("UsageBasedPricingTerm")) if obj.get("UsageBasedPricingTerm") is not None else None,
-            "ConfigurableUpfrontPricingTerm": ConfigurableUpfrontPricingTerm.from_dict(obj.get("ConfigurableUpfrontPricingTerm")) if obj.get("ConfigurableUpfrontPricingTerm") is not None else None,
-            "RecurringPaymentTerm": RecurringPaymentTerm.from_dict(obj.get("RecurringPaymentTerm")) if obj.get("RecurringPaymentTerm") is not None else None,
-            "FixedUpfrontPricingTerm": FixedUpfrontPricingTerm.from_dict(obj.get("FixedUpfrontPricingTerm")) if obj.get("FixedUpfrontPricingTerm") is not None else None,
-            "SupportTerm": SupportTerm.from_dict(obj.get("SupportTerm")) if obj.get("SupportTerm") is not None else None,
-            "RenewalTerm": RenewalTerm.from_dict(obj.get("RenewalTerm")) if obj.get("RenewalTerm") is not None else None,
-            "ValidityTerm": ValidityTerm.from_dict(obj.get("ValidityTerm")) if obj.get("ValidityTerm") is not None else None,
-            "UpdateInformationChangeDetail": UpdateInformationChangeDetail.from_dict(obj.get("UpdateInformationChangeDetail")) if obj.get("UpdateInformationChangeDetail") is not None else None,
-            "UpdateTargetingChangeDetail": UpdateTargetingChangeDetail.from_dict(obj.get("UpdateTargetingChangeDetail")) if obj.get("UpdateTargetingChangeDetail") is not None else None
+            "CustomerVerificationTerm": CustomerVerificationTerm.from_dict(obj["CustomerVerificationTerm"]) if obj.get("CustomerVerificationTerm") is not None else None,
+            "LegalTerm": LegalTerm.from_dict(obj["LegalTerm"]) if obj.get("LegalTerm") is not None else None,
+            "PaymentScheduleTerm": PaymentScheduleTerm.from_dict(obj["PaymentScheduleTerm"]) if obj.get("PaymentScheduleTerm") is not None else None,
+            "ByolPricingTerm": ByolPricingTerm.from_dict(obj["ByolPricingTerm"]) if obj.get("ByolPricingTerm") is not None else None,
+            "FreeTrialPricingTerm": FreeTrialPricingTerm.from_dict(obj["FreeTrialPricingTerm"]) if obj.get("FreeTrialPricingTerm") is not None else None,
+            "UsageBasedPricingTerm": UsageBasedPricingTerm.from_dict(obj["UsageBasedPricingTerm"]) if obj.get("UsageBasedPricingTerm") is not None else None,
+            "ConfigurableUpfrontPricingTerm": ConfigurableUpfrontPricingTerm.from_dict(obj["ConfigurableUpfrontPricingTerm"]) if obj.get("ConfigurableUpfrontPricingTerm") is not None else None,
+            "RecurringPaymentTerm": RecurringPaymentTerm.from_dict(obj["RecurringPaymentTerm"]) if obj.get("RecurringPaymentTerm") is not None else None,
+            "FixedUpfrontPricingTerm": FixedUpfrontPricingTerm.from_dict(obj["FixedUpfrontPricingTerm"]) if obj.get("FixedUpfrontPricingTerm") is not None else None,
+            "SupportTerm": SupportTerm.from_dict(obj["SupportTerm"]) if obj.get("SupportTerm") is not None else None,
+            "RenewalTerm": RenewalTerm.from_dict(obj["RenewalTerm"]) if obj.get("RenewalTerm") is not None else None,
+            "ValidityTerm": ValidityTerm.from_dict(obj["ValidityTerm"]) if obj.get("ValidityTerm") is not None else None,
+            "UpdateInformationChangeDetail": UpdateInformationChangeDetail.from_dict(obj["UpdateInformationChangeDetail"]) if obj.get("UpdateInformationChangeDetail") is not None else None,
+            "UpdateTargetingChangeDetail": UpdateTargetingChangeDetail.from_dict(obj["UpdateTargetingChangeDetail"]) if obj.get("UpdateTargetingChangeDetail") is not None else None
         })
         return _obj
 

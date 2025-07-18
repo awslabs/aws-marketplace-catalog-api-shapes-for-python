@@ -17,16 +17,12 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr
-from pydantic import Field
 from aws_marketplace_catalog_shapes_offer_1_0.models.negative_targeting import NegativeTargeting
 from aws_marketplace_catalog_shapes_offer_1_0.models.positive_targeting import PositiveTargeting
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class Rule(BaseModel):
     """
@@ -38,10 +34,11 @@ class Rule(BaseModel):
     negative_targeting: Optional[NegativeTargeting] = Field(default=None, alias="NegativeTargeting")
     __properties: ClassVar[List[str]] = ["Type", "AvailabilityEndDate", "PositiveTargeting", "NegativeTargeting"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -54,7 +51,7 @@ class Rule(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of Rule from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -68,10 +65,12 @@ class Rule(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of positive_targeting
@@ -83,7 +82,7 @@ class Rule(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of Rule from a dict"""
         if obj is None:
             return None
@@ -94,8 +93,8 @@ class Rule(BaseModel):
         _obj = cls.model_validate({
             "Type": obj.get("Type"),
             "AvailabilityEndDate": obj.get("AvailabilityEndDate"),
-            "PositiveTargeting": PositiveTargeting.from_dict(obj.get("PositiveTargeting")) if obj.get("PositiveTargeting") is not None else None,
-            "NegativeTargeting": NegativeTargeting.from_dict(obj.get("NegativeTargeting")) if obj.get("NegativeTargeting") is not None else None
+            "PositiveTargeting": PositiveTargeting.from_dict(obj["PositiveTargeting"]) if obj.get("PositiveTargeting") is not None else None,
+            "NegativeTargeting": NegativeTargeting.from_dict(obj["NegativeTargeting"]) if obj.get("NegativeTargeting") is not None else None
         })
         return _obj
 

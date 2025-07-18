@@ -17,16 +17,12 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictBool, StrictStr
-from pydantic import Field
 from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.deployment_template import DeploymentTemplate
 from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.targeting import Targeting
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class DeliveryOption(BaseModel):
     """
@@ -43,10 +39,11 @@ class DeliveryOption(BaseModel):
     targeting: Optional[Targeting] = Field(default=None, alias="Targeting")
     __properties: ClassVar[List[str]] = ["Id", "Type", "FulfillmentUrl", "QuickLaunchEnabled", "LaunchUrl", "DeploymentTemplates", "UsageInstructions", "Visibility", "Targeting"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -59,7 +56,7 @@ class DeliveryOption(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of DeliveryOption from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -73,18 +70,20 @@ class DeliveryOption(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in deployment_templates (list)
         _items = []
         if self.deployment_templates:
-            for _item in self.deployment_templates:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_deployment_templates in self.deployment_templates:
+                if _item_deployment_templates:
+                    _items.append(_item_deployment_templates.to_dict())
             _dict['DeploymentTemplates'] = _items
         # override the default output from pydantic by calling `to_dict()` of targeting
         if self.targeting:
@@ -92,7 +91,7 @@ class DeliveryOption(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of DeliveryOption from a dict"""
         if obj is None:
             return None
@@ -106,10 +105,10 @@ class DeliveryOption(BaseModel):
             "FulfillmentUrl": obj.get("FulfillmentUrl"),
             "QuickLaunchEnabled": obj.get("QuickLaunchEnabled"),
             "LaunchUrl": obj.get("LaunchUrl"),
-            "DeploymentTemplates": [DeploymentTemplate.from_dict(_item) for _item in obj.get("DeploymentTemplates")] if obj.get("DeploymentTemplates") is not None else None,
+            "DeploymentTemplates": [DeploymentTemplate.from_dict(_item) for _item in obj["DeploymentTemplates"]] if obj.get("DeploymentTemplates") is not None else None,
             "UsageInstructions": obj.get("UsageInstructions"),
             "Visibility": obj.get("Visibility"),
-            "Targeting": Targeting.from_dict(obj.get("Targeting")) if obj.get("Targeting") is not None else None
+            "Targeting": Targeting.from_dict(obj["Targeting"]) if obj.get("Targeting") is not None else None
         })
         return _obj
 

@@ -17,16 +17,12 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel
-from pydantic import Field
 from typing_extensions import Annotated
 from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.cloud_formation_details import CloudFormationDetails
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class DeploymentTemplate(BaseModel):
     """
@@ -38,10 +34,11 @@ class DeploymentTemplate(BaseModel):
     cloud_formation_details: CloudFormationDetails = Field(alias="CloudFormationDetails")
     __properties: ClassVar[List[str]] = ["Title", "Description", "IamPolicy", "CloudFormationDetails"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -54,7 +51,7 @@ class DeploymentTemplate(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of DeploymentTemplate from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -68,10 +65,12 @@ class DeploymentTemplate(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of cloud_formation_details
@@ -80,7 +79,7 @@ class DeploymentTemplate(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of DeploymentTemplate from a dict"""
         if obj is None:
             return None
@@ -92,7 +91,7 @@ class DeploymentTemplate(BaseModel):
             "Title": obj.get("Title"),
             "Description": obj.get("Description"),
             "IamPolicy": obj.get("IamPolicy"),
-            "CloudFormationDetails": CloudFormationDetails.from_dict(obj.get("CloudFormationDetails")) if obj.get("CloudFormationDetails") is not None else None
+            "CloudFormationDetails": CloudFormationDetails.from_dict(obj["CloudFormationDetails"]) if obj.get("CloudFormationDetails") is not None else None
         })
         return _obj
 

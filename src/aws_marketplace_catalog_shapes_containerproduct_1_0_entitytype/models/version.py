@@ -17,16 +17,12 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr
-from pydantic import Field
 from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.delivery_option import DeliveryOption
 from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.source import Source
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class Version(BaseModel):
     """
@@ -41,10 +37,11 @@ class Version(BaseModel):
     delivery_options: Optional[List[DeliveryOption]] = Field(default=None, alias="DeliveryOptions")
     __properties: ClassVar[List[str]] = ["Id", "ReleaseNotes", "UpgradeInstructions", "VersionTitle", "CreationDate", "Sources", "DeliveryOptions"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -57,7 +54,7 @@ class Version(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of Version from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -71,30 +68,32 @@ class Version(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in sources (list)
         _items = []
         if self.sources:
-            for _item in self.sources:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_sources in self.sources:
+                if _item_sources:
+                    _items.append(_item_sources.to_dict())
             _dict['Sources'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in delivery_options (list)
         _items = []
         if self.delivery_options:
-            for _item in self.delivery_options:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_delivery_options in self.delivery_options:
+                if _item_delivery_options:
+                    _items.append(_item_delivery_options.to_dict())
             _dict['DeliveryOptions'] = _items
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of Version from a dict"""
         if obj is None:
             return None
@@ -108,8 +107,8 @@ class Version(BaseModel):
             "UpgradeInstructions": obj.get("UpgradeInstructions"),
             "VersionTitle": obj.get("VersionTitle"),
             "CreationDate": obj.get("CreationDate"),
-            "Sources": [Source.from_dict(_item) for _item in obj.get("Sources")] if obj.get("Sources") is not None else None,
-            "DeliveryOptions": [DeliveryOption.from_dict(_item) for _item in obj.get("DeliveryOptions")] if obj.get("DeliveryOptions") is not None else None
+            "Sources": [Source.from_dict(_item) for _item in obj["Sources"]] if obj.get("Sources") is not None else None,
+            "DeliveryOptions": [DeliveryOption.from_dict(_item) for _item in obj["DeliveryOptions"]] if obj.get("DeliveryOptions") is not None else None
         })
         return _obj
 

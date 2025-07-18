@@ -17,16 +17,12 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, field_validator
-from pydantic import Field
 from typing_extensions import Annotated
 from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.deployment_template import DeploymentTemplate
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class UpdateSaaSUrlDeliveryOptionDetails(BaseModel):
     """
@@ -58,10 +54,11 @@ class UpdateSaaSUrlDeliveryOptionDetails(BaseModel):
             raise ValueError(r"must validate the regular expression /https:\/\/(www\.)?[-a-zA-Z0-9@._]{1,256}\.[a-zA-Z0-9()]{1,63}\b([-a-zA-Z0-9@_\+.\/\/]*)/")
         return value
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -74,7 +71,7 @@ class UpdateSaaSUrlDeliveryOptionDetails(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of UpdateSaaSUrlDeliveryOptionDetails from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -88,23 +85,25 @@ class UpdateSaaSUrlDeliveryOptionDetails(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in deployment_templates (list)
         _items = []
         if self.deployment_templates:
-            for _item in self.deployment_templates:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_deployment_templates in self.deployment_templates:
+                if _item_deployment_templates:
+                    _items.append(_item_deployment_templates.to_dict())
             _dict['DeploymentTemplates'] = _items
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of UpdateSaaSUrlDeliveryOptionDetails from a dict"""
         if obj is None:
             return None
@@ -115,7 +114,7 @@ class UpdateSaaSUrlDeliveryOptionDetails(BaseModel):
         _obj = cls.model_validate({
             "FulfillmentUrl": obj.get("FulfillmentUrl"),
             "LaunchUrl": obj.get("LaunchUrl"),
-            "DeploymentTemplates": [DeploymentTemplate.from_dict(_item) for _item in obj.get("DeploymentTemplates")] if obj.get("DeploymentTemplates") is not None else None,
+            "DeploymentTemplates": [DeploymentTemplate.from_dict(_item) for _item in obj["DeploymentTemplates"]] if obj.get("DeploymentTemplates") is not None else None,
             "UsageInstructions": obj.get("UsageInstructions")
         })
         return _obj

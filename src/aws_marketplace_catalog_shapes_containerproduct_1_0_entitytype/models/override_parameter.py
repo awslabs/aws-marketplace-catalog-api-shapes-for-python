@@ -17,15 +17,11 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr
-from pydantic import Field
 from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.metadata import Metadata
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class OverrideParameter(BaseModel):
     """
@@ -36,10 +32,11 @@ class OverrideParameter(BaseModel):
     metadata: Optional[Metadata] = Field(default=None, alias="Metadata")
     __properties: ClassVar[List[str]] = ["Key", "Default", "Metadata"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -52,7 +49,7 @@ class OverrideParameter(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of OverrideParameter from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -66,10 +63,12 @@ class OverrideParameter(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of metadata
@@ -78,7 +77,7 @@ class OverrideParameter(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of OverrideParameter from a dict"""
         if obj is None:
             return None
@@ -89,7 +88,7 @@ class OverrideParameter(BaseModel):
         _obj = cls.model_validate({
             "Key": obj.get("Key"),
             "Default": obj.get("Default"),
-            "Metadata": Metadata.from_dict(obj.get("Metadata")) if obj.get("Metadata") is not None else None
+            "Metadata": Metadata.from_dict(obj["Metadata"]) if obj.get("Metadata") is not None else None
         })
         return _obj
 

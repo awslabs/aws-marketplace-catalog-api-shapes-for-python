@@ -17,17 +17,13 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictBool, field_validator
-from pydantic import Field
 from typing_extensions import Annotated
 from aws_marketplace_catalog_shapes_containerproduct_1_0_changetypes.models.add_delivery_option_details import AddDeliveryOptionDetails
 from aws_marketplace_catalog_shapes_containerproduct_1_0_changetypes.models.add_delivery_option_visibility import AddDeliveryOptionVisibility
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class AddDeliveryOption(BaseModel):
     """
@@ -49,10 +45,11 @@ class AddDeliveryOption(BaseModel):
             raise ValueError(r"must validate the regular expression /^\S+[\S\s]*/")
         return value
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -65,7 +62,7 @@ class AddDeliveryOption(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of AddDeliveryOption from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -79,10 +76,12 @@ class AddDeliveryOption(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of details
@@ -91,7 +90,7 @@ class AddDeliveryOption(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of AddDeliveryOption from a dict"""
         if obj is None:
             return None
@@ -103,7 +102,7 @@ class AddDeliveryOption(BaseModel):
             "DeliveryOptionTitle": obj.get("DeliveryOptionTitle"),
             "Release": obj.get("Release"),
             "Visibility": obj.get("Visibility"),
-            "Details": AddDeliveryOptionDetails.from_dict(obj.get("Details")) if obj.get("Details") is not None else None
+            "Details": AddDeliveryOptionDetails.from_dict(obj["Details"]) if obj.get("Details") is not None else None
         })
         return _obj
 

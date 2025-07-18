@@ -17,17 +17,13 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel
-from pydantic import Field
 from aws_marketplace_catalog_shapes_containerproduct_1_0_changetypes.models.add_delivery_options_ecr_delivery_option_details import AddDeliveryOptionsEcrDeliveryOptionDetails
 from aws_marketplace_catalog_shapes_containerproduct_1_0_changetypes.models.add_delivery_options_eks_add_on_delivery_option_details import AddDeliveryOptionsEksAddOnDeliveryOptionDetails
 from aws_marketplace_catalog_shapes_containerproduct_1_0_changetypes.models.add_delivery_options_helm_delivery_option_details import AddDeliveryOptionsHelmDeliveryOptionDetails
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class AddDeliveryOptionDetails(BaseModel):
     """
@@ -38,10 +34,11 @@ class AddDeliveryOptionDetails(BaseModel):
     eks_add_on_delivery_option_details: Optional[AddDeliveryOptionsEksAddOnDeliveryOptionDetails] = Field(default=None, alias="EksAddOnDeliveryOptionDetails")
     __properties: ClassVar[List[str]] = ["EcrDeliveryOptionDetails", "HelmDeliveryOptionDetails", "EksAddOnDeliveryOptionDetails"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -54,7 +51,7 @@ class AddDeliveryOptionDetails(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of AddDeliveryOptionDetails from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -68,10 +65,12 @@ class AddDeliveryOptionDetails(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of ecr_delivery_option_details
@@ -86,7 +85,7 @@ class AddDeliveryOptionDetails(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of AddDeliveryOptionDetails from a dict"""
         if obj is None:
             return None
@@ -95,9 +94,9 @@ class AddDeliveryOptionDetails(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "EcrDeliveryOptionDetails": AddDeliveryOptionsEcrDeliveryOptionDetails.from_dict(obj.get("EcrDeliveryOptionDetails")) if obj.get("EcrDeliveryOptionDetails") is not None else None,
-            "HelmDeliveryOptionDetails": AddDeliveryOptionsHelmDeliveryOptionDetails.from_dict(obj.get("HelmDeliveryOptionDetails")) if obj.get("HelmDeliveryOptionDetails") is not None else None,
-            "EksAddOnDeliveryOptionDetails": AddDeliveryOptionsEksAddOnDeliveryOptionDetails.from_dict(obj.get("EksAddOnDeliveryOptionDetails")) if obj.get("EksAddOnDeliveryOptionDetails") is not None else None
+            "EcrDeliveryOptionDetails": AddDeliveryOptionsEcrDeliveryOptionDetails.from_dict(obj["EcrDeliveryOptionDetails"]) if obj.get("EcrDeliveryOptionDetails") is not None else None,
+            "HelmDeliveryOptionDetails": AddDeliveryOptionsHelmDeliveryOptionDetails.from_dict(obj["HelmDeliveryOptionDetails"]) if obj.get("HelmDeliveryOptionDetails") is not None else None,
+            "EksAddOnDeliveryOptionDetails": AddDeliveryOptionsEksAddOnDeliveryOptionDetails.from_dict(obj["EksAddOnDeliveryOptionDetails"]) if obj.get("EksAddOnDeliveryOptionDetails") is not None else None
         })
         return _obj
 
