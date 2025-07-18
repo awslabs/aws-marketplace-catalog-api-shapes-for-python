@@ -7,7 +7,7 @@ with open("requirements.txt", "r") as fh:
 
 setup(
     name="aws-marketplace-catalog-api-shape-library-for-python",
-    version="1.0.0",
+    version="1.1.0",
     author="Amazon Web Services",
     license="Apache License 2.0",
     url="https://github.com/awslabs/aws-marketplace-catalog-api-shapes-for-python",

@@ -17,16 +17,12 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
-from pydantic import BaseModel
-from pydantic import Field
 from typing_extensions import Annotated
 from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.update_delivery_option_visibility import UpdateDeliveryOptionVisibility
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class UpdateDeliveryOptionsVisibilityChangeDetail(BaseModel):
     """
@@ -35,10 +31,11 @@ class UpdateDeliveryOptionsVisibilityChangeDetail(BaseModel):
     delivery_options: Annotated[List[UpdateDeliveryOptionVisibility], Field(max_length=2)] = Field(alias="DeliveryOptions")
     __properties: ClassVar[List[str]] = ["DeliveryOptions"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -51,7 +48,7 @@ class UpdateDeliveryOptionsVisibilityChangeDetail(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of UpdateDeliveryOptionsVisibilityChangeDetail from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -65,23 +62,25 @@ class UpdateDeliveryOptionsVisibilityChangeDetail(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in delivery_options (list)
         _items = []
         if self.delivery_options:
-            for _item in self.delivery_options:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_delivery_options in self.delivery_options:
+                if _item_delivery_options:
+                    _items.append(_item_delivery_options.to_dict())
             _dict['DeliveryOptions'] = _items
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of UpdateDeliveryOptionsVisibilityChangeDetail from a dict"""
         if obj is None:
             return None
@@ -90,7 +89,7 @@ class UpdateDeliveryOptionsVisibilityChangeDetail(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "DeliveryOptions": [UpdateDeliveryOptionVisibility.from_dict(_item) for _item in obj.get("DeliveryOptions")] if obj.get("DeliveryOptions") is not None else None
+            "DeliveryOptions": [UpdateDeliveryOptionVisibility.from_dict(_item) for _item in obj["DeliveryOptions"]] if obj.get("DeliveryOptions") is not None else None
         })
         return _obj
 

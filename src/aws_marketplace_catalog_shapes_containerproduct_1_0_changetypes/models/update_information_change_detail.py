@@ -17,16 +17,12 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, field_validator
-from pydantic import Field
 from typing_extensions import Annotated
 from aws_marketplace_catalog_shapes_containerproduct_1_0_changetypes.models.additional_resource import AdditionalResource
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class UpdateInformationChangeDetail(BaseModel):
     """
@@ -106,10 +102,11 @@ class UpdateInformationChangeDetail(BaseModel):
             raise ValueError(r"must validate the regular expression /^\S+[\S\s]*/")
         return value
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -122,7 +119,7 @@ class UpdateInformationChangeDetail(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of UpdateInformationChangeDetail from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -136,23 +133,25 @@ class UpdateInformationChangeDetail(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in additional_resources (list)
         _items = []
         if self.additional_resources:
-            for _item in self.additional_resources:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_additional_resources in self.additional_resources:
+                if _item_additional_resources:
+                    _items.append(_item_additional_resources.to_dict())
             _dict['AdditionalResources'] = _items
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of UpdateInformationChangeDetail from a dict"""
         if obj is None:
             return None
@@ -168,7 +167,7 @@ class UpdateInformationChangeDetail(BaseModel):
             "LogoUrl": obj.get("LogoUrl"),
             "VideoUrls": obj.get("VideoUrls"),
             "Highlights": obj.get("Highlights"),
-            "AdditionalResources": [AdditionalResource.from_dict(_item) for _item in obj.get("AdditionalResources")] if obj.get("AdditionalResources") is not None else None,
+            "AdditionalResources": [AdditionalResource.from_dict(_item) for _item in obj["AdditionalResources"]] if obj.get("AdditionalResources") is not None else None,
             "SupportDescription": obj.get("SupportDescription"),
             "Categories": obj.get("Categories"),
             "AssociatedProducts": obj.get("AssociatedProducts"),

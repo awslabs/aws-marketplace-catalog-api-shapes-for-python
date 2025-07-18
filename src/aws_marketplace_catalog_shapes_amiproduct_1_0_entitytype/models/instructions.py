@@ -17,15 +17,11 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr
-from pydantic import Field
 from aws_marketplace_catalog_shapes_amiproduct_1_0_entitytype.models.access import Access
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class Instructions(BaseModel):
     """
@@ -35,10 +31,11 @@ class Instructions(BaseModel):
     access: Optional[Access] = Field(default=None, alias="Access")
     __properties: ClassVar[List[str]] = ["Usage", "Access"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -51,7 +48,7 @@ class Instructions(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of Instructions from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -65,10 +62,12 @@ class Instructions(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of access
@@ -77,7 +76,7 @@ class Instructions(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of Instructions from a dict"""
         if obj is None:
             return None
@@ -87,7 +86,7 @@ class Instructions(BaseModel):
 
         _obj = cls.model_validate({
             "Usage": obj.get("Usage"),
-            "Access": Access.from_dict(obj.get("Access")) if obj.get("Access") is not None else None
+            "Access": Access.from_dict(obj["Access"]) if obj.get("Access") is not None else None
         })
         return _obj
 

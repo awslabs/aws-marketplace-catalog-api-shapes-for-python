@@ -17,18 +17,14 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr
-from pydantic import Field
 from aws_marketplace_catalog_shapes_offer_1_0.models.document_item import DocumentItem
 from aws_marketplace_catalog_shapes_offer_1_0.models.grant_item import GrantItem
 from aws_marketplace_catalog_shapes_offer_1_0.models.rate_cards_item import RateCardsItem
 from aws_marketplace_catalog_shapes_offer_1_0.models.schedule_item import ScheduleItem
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class Term(BaseModel):
     """
@@ -51,10 +47,11 @@ class Term(BaseModel):
     agreement_end_date: Optional[StrictStr] = Field(default=None, alias="AgreementEndDate")
     __properties: ClassVar[List[str]] = ["Type", "CurrencyCode", "ApprovalStrategy", "ExpirationDuration", "Documents", "Schedule", "Duration", "Grants", "RateCards", "BillingPeriod", "Price", "RefundPolicy", "AgreementDuration", "AgreementStartDate", "AgreementEndDate"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -67,7 +64,7 @@ class Term(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of Term from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -81,44 +78,46 @@ class Term(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in documents (list)
         _items = []
         if self.documents:
-            for _item in self.documents:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_documents in self.documents:
+                if _item_documents:
+                    _items.append(_item_documents.to_dict())
             _dict['Documents'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in schedule (list)
         _items = []
         if self.schedule:
-            for _item in self.schedule:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_schedule in self.schedule:
+                if _item_schedule:
+                    _items.append(_item_schedule.to_dict())
             _dict['Schedule'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in grants (list)
         _items = []
         if self.grants:
-            for _item in self.grants:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_grants in self.grants:
+                if _item_grants:
+                    _items.append(_item_grants.to_dict())
             _dict['Grants'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in rate_cards (list)
         _items = []
         if self.rate_cards:
-            for _item in self.rate_cards:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_rate_cards in self.rate_cards:
+                if _item_rate_cards:
+                    _items.append(_item_rate_cards.to_dict())
             _dict['RateCards'] = _items
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of Term from a dict"""
         if obj is None:
             return None
@@ -131,11 +130,11 @@ class Term(BaseModel):
             "CurrencyCode": obj.get("CurrencyCode"),
             "ApprovalStrategy": obj.get("ApprovalStrategy"),
             "ExpirationDuration": obj.get("ExpirationDuration"),
-            "Documents": [DocumentItem.from_dict(_item) for _item in obj.get("Documents")] if obj.get("Documents") is not None else None,
-            "Schedule": [ScheduleItem.from_dict(_item) for _item in obj.get("Schedule")] if obj.get("Schedule") is not None else None,
+            "Documents": [DocumentItem.from_dict(_item) for _item in obj["Documents"]] if obj.get("Documents") is not None else None,
+            "Schedule": [ScheduleItem.from_dict(_item) for _item in obj["Schedule"]] if obj.get("Schedule") is not None else None,
             "Duration": obj.get("Duration"),
-            "Grants": [GrantItem.from_dict(_item) for _item in obj.get("Grants")] if obj.get("Grants") is not None else None,
-            "RateCards": [RateCardsItem.from_dict(_item) for _item in obj.get("RateCards")] if obj.get("RateCards") is not None else None,
+            "Grants": [GrantItem.from_dict(_item) for _item in obj["Grants"]] if obj.get("Grants") is not None else None,
+            "RateCards": [RateCardsItem.from_dict(_item) for _item in obj["RateCards"]] if obj.get("RateCards") is not None else None,
             "BillingPeriod": obj.get("BillingPeriod"),
             "Price": obj.get("Price"),
             "RefundPolicy": obj.get("RefundPolicy"),

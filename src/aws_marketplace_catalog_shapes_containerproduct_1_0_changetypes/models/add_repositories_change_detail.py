@@ -17,16 +17,12 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
-from pydantic import BaseModel
-from pydantic import Field
 from typing_extensions import Annotated
 from aws_marketplace_catalog_shapes_containerproduct_1_0_changetypes.models.repository import Repository
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class AddRepositoriesChangeDetail(BaseModel):
     """
@@ -35,10 +31,11 @@ class AddRepositoriesChangeDetail(BaseModel):
     repositories: Annotated[List[Repository], Field(min_length=1, max_length=50)] = Field(alias="Repositories")
     __properties: ClassVar[List[str]] = ["Repositories"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -51,7 +48,7 @@ class AddRepositoriesChangeDetail(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of AddRepositoriesChangeDetail from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -65,23 +62,25 @@ class AddRepositoriesChangeDetail(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in repositories (list)
         _items = []
         if self.repositories:
-            for _item in self.repositories:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_repositories in self.repositories:
+                if _item_repositories:
+                    _items.append(_item_repositories.to_dict())
             _dict['Repositories'] = _items
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of AddRepositoriesChangeDetail from a dict"""
         if obj is None:
             return None
@@ -90,7 +89,7 @@ class AddRepositoriesChangeDetail(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "Repositories": [Repository.from_dict(_item) for _item in obj.get("Repositories")] if obj.get("Repositories") is not None else None
+            "Repositories": [Repository.from_dict(_item) for _item in obj["Repositories"]] if obj.get("Repositories") is not None else None
         })
         return _obj
 

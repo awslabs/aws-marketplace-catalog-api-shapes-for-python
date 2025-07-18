@@ -14,16 +14,8 @@
 
 from __future__ import annotations
 import json
-import pprint
-import re  # noqa: F401
 from enum import Enum
-
-
-
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import Self
 
 
 class PricingTermCurrencyCode(str, Enum):
@@ -35,6 +27,10 @@ class PricingTermCurrencyCode(str, Enum):
     allowed enum values
     """
     USD = 'USD'
+    AUD = 'AUD'
+    EUR = 'EUR'
+    GBP = 'GBP'
+    JPY = 'JPY'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

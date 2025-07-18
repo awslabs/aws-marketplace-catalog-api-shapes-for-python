@@ -17,19 +17,15 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictBool, StrictStr
-from pydantic import Field
 from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.delivery_option_compatibility import DeliveryOptionCompatibility
 from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.environment_override_parameter import EnvironmentOverrideParameter
 from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.instructions import Instructions
 from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.override_parameter import OverrideParameter
 from aws_marketplace_catalog_shapes_containerproduct_1_0_entitytype.models.recommendations import Recommendations
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class DeliveryOption(BaseModel):
     """
@@ -58,10 +54,11 @@ class DeliveryOption(BaseModel):
     add_on_version: Optional[StrictStr] = Field(default=None, alias="AddOnVersion")
     __properties: ClassVar[List[str]] = ["Id", "Type", "SourceId", "Title", "ShortDescription", "isRecommended", "Compatibility", "Instructions", "Recommendations", "Visibility", "QuickLaunchEnabled", "ReleaseName", "MarketplaceServiceAccountName", "Namespace", "OverrideParameters", "AddOnType", "EnvironmentOverrideParameters", "DisplayAddOnName", "AddOnName", "DisplayAddOnVersion", "AddOnVersion"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -74,7 +71,7 @@ class DeliveryOption(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of DeliveryOption from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -88,10 +85,12 @@ class DeliveryOption(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of compatibility
@@ -106,21 +105,21 @@ class DeliveryOption(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in override_parameters (list)
         _items = []
         if self.override_parameters:
-            for _item in self.override_parameters:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_override_parameters in self.override_parameters:
+                if _item_override_parameters:
+                    _items.append(_item_override_parameters.to_dict())
             _dict['OverrideParameters'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in environment_override_parameters (list)
         _items = []
         if self.environment_override_parameters:
-            for _item in self.environment_override_parameters:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_environment_override_parameters in self.environment_override_parameters:
+                if _item_environment_override_parameters:
+                    _items.append(_item_environment_override_parameters.to_dict())
             _dict['EnvironmentOverrideParameters'] = _items
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of DeliveryOption from a dict"""
         if obj is None:
             return None
@@ -135,17 +134,17 @@ class DeliveryOption(BaseModel):
             "Title": obj.get("Title"),
             "ShortDescription": obj.get("ShortDescription"),
             "isRecommended": obj.get("isRecommended"),
-            "Compatibility": DeliveryOptionCompatibility.from_dict(obj.get("Compatibility")) if obj.get("Compatibility") is not None else None,
-            "Instructions": Instructions.from_dict(obj.get("Instructions")) if obj.get("Instructions") is not None else None,
-            "Recommendations": Recommendations.from_dict(obj.get("Recommendations")) if obj.get("Recommendations") is not None else None,
+            "Compatibility": DeliveryOptionCompatibility.from_dict(obj["Compatibility"]) if obj.get("Compatibility") is not None else None,
+            "Instructions": Instructions.from_dict(obj["Instructions"]) if obj.get("Instructions") is not None else None,
+            "Recommendations": Recommendations.from_dict(obj["Recommendations"]) if obj.get("Recommendations") is not None else None,
             "Visibility": obj.get("Visibility"),
             "QuickLaunchEnabled": obj.get("QuickLaunchEnabled"),
             "ReleaseName": obj.get("ReleaseName"),
             "MarketplaceServiceAccountName": obj.get("MarketplaceServiceAccountName"),
             "Namespace": obj.get("Namespace"),
-            "OverrideParameters": [OverrideParameter.from_dict(_item) for _item in obj.get("OverrideParameters")] if obj.get("OverrideParameters") is not None else None,
+            "OverrideParameters": [OverrideParameter.from_dict(_item) for _item in obj["OverrideParameters"]] if obj.get("OverrideParameters") is not None else None,
             "AddOnType": obj.get("AddOnType"),
-            "EnvironmentOverrideParameters": [EnvironmentOverrideParameter.from_dict(_item) for _item in obj.get("EnvironmentOverrideParameters")] if obj.get("EnvironmentOverrideParameters") is not None else None,
+            "EnvironmentOverrideParameters": [EnvironmentOverrideParameter.from_dict(_item) for _item in obj["EnvironmentOverrideParameters"]] if obj.get("EnvironmentOverrideParameters") is not None else None,
             "DisplayAddOnName": obj.get("DisplayAddOnName"),
             "AddOnName": obj.get("AddOnName"),
             "DisplayAddOnVersion": obj.get("DisplayAddOnVersion"),

@@ -17,16 +17,12 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr
-from pydantic import Field
 from aws_marketplace_catalog_shapes_amiproduct_1_0_entitytype.models.instructions import Instructions
 from aws_marketplace_catalog_shapes_amiproduct_1_0_entitytype.models.recommendations import Recommendations
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class DeliveryOption(BaseModel):
     """
@@ -44,10 +40,11 @@ class DeliveryOption(BaseModel):
     ami_alias: Optional[StrictStr] = Field(default=None, alias="AmiAlias")
     __properties: ClassVar[List[str]] = ["Id", "Type", "SourceId", "Title", "ShortDescription", "LongDescription", "Instructions", "Visibility", "Recommendations", "AmiAlias"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -60,7 +57,7 @@ class DeliveryOption(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of DeliveryOption from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -74,10 +71,12 @@ class DeliveryOption(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of instructions
@@ -89,7 +88,7 @@ class DeliveryOption(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of DeliveryOption from a dict"""
         if obj is None:
             return None
@@ -104,9 +103,9 @@ class DeliveryOption(BaseModel):
             "Title": obj.get("Title"),
             "ShortDescription": obj.get("ShortDescription"),
             "LongDescription": obj.get("LongDescription"),
-            "Instructions": Instructions.from_dict(obj.get("Instructions")) if obj.get("Instructions") is not None else None,
+            "Instructions": Instructions.from_dict(obj["Instructions"]) if obj.get("Instructions") is not None else None,
             "Visibility": obj.get("Visibility"),
-            "Recommendations": Recommendations.from_dict(obj.get("Recommendations")) if obj.get("Recommendations") is not None else None,
+            "Recommendations": Recommendations.from_dict(obj["Recommendations"]) if obj.get("Recommendations") is not None else None,
             "AmiAlias": obj.get("AmiAlias")
         })
         return _obj

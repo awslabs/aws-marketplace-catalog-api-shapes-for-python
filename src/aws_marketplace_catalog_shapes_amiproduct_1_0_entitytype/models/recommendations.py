@@ -17,15 +17,11 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr
-from pydantic import Field
 from aws_marketplace_catalog_shapes_amiproduct_1_0_entitytype.models.security_group import SecurityGroup
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class Recommendations(BaseModel):
     """
@@ -35,10 +31,11 @@ class Recommendations(BaseModel):
     instance_type: Optional[StrictStr] = Field(default=None, alias="InstanceType")
     __properties: ClassVar[List[str]] = ["SecurityGroups", "InstanceType"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -51,7 +48,7 @@ class Recommendations(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of Recommendations from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -65,23 +62,25 @@ class Recommendations(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in security_groups (list)
         _items = []
         if self.security_groups:
-            for _item in self.security_groups:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_security_groups in self.security_groups:
+                if _item_security_groups:
+                    _items.append(_item_security_groups.to_dict())
             _dict['SecurityGroups'] = _items
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of Recommendations from a dict"""
         if obj is None:
             return None
@@ -90,7 +89,7 @@ class Recommendations(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "SecurityGroups": [SecurityGroup.from_dict(_item) for _item in obj.get("SecurityGroups")] if obj.get("SecurityGroups") is not None else None,
+            "SecurityGroups": [SecurityGroup.from_dict(_item) for _item in obj["SecurityGroups"]] if obj.get("SecurityGroups") is not None else None,
             "InstanceType": obj.get("InstanceType")
         })
         return _obj

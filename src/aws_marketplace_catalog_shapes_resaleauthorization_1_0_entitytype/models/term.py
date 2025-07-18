@@ -17,19 +17,15 @@ import pprint
 import re  # noqa: F401
 import json
 
-
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr
-from pydantic import Field
 from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.document import Document
 from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.grant import Grant
 from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.positive_targeting import PositiveTargeting
 from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.rate_cards import RateCards
 from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.schedule import Schedule
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing import Optional, Set
+from typing_extensions import Self
 
 class Term(BaseModel):
     """
@@ -48,10 +44,11 @@ class Term(BaseModel):
     schedule: Optional[List[Schedule]] = Field(default=None, alias="Schedule")
     __properties: ClassVar[List[str]] = ["Type", "Id", "PositiveTargeting", "Documents", "MaximumAgreementStartDate", "CurrencyCode", "RateCards", "Duration", "Price", "Grants", "Schedule"]
 
-    model_config = {
-        "populate_by_name": True,
-        "validate_assignment": True
-    }
+    model_config = ConfigDict(
+        populate_by_name=True,
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
 
     def to_str(self) -> str:
@@ -64,7 +61,7 @@ class Term(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of Term from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -78,10 +75,12 @@ class Term(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         """
+        excluded_fields: Set[str] = set([
+        ])
+
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude=excluded_fields,
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of positive_targeting
@@ -90,35 +89,35 @@ class Term(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in documents (list)
         _items = []
         if self.documents:
-            for _item in self.documents:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_documents in self.documents:
+                if _item_documents:
+                    _items.append(_item_documents.to_dict())
             _dict['Documents'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in rate_cards (list)
         _items = []
         if self.rate_cards:
-            for _item in self.rate_cards:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_rate_cards in self.rate_cards:
+                if _item_rate_cards:
+                    _items.append(_item_rate_cards.to_dict())
             _dict['RateCards'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in grants (list)
         _items = []
         if self.grants:
-            for _item in self.grants:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_grants in self.grants:
+                if _item_grants:
+                    _items.append(_item_grants.to_dict())
             _dict['Grants'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in schedule (list)
         _items = []
         if self.schedule:
-            for _item in self.schedule:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_schedule in self.schedule:
+                if _item_schedule:
+                    _items.append(_item_schedule.to_dict())
             _dict['Schedule'] = _items
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of Term from a dict"""
         if obj is None:
             return None
@@ -129,15 +128,15 @@ class Term(BaseModel):
         _obj = cls.model_validate({
             "Type": obj.get("Type"),
             "Id": obj.get("Id"),
-            "PositiveTargeting": PositiveTargeting.from_dict(obj.get("PositiveTargeting")) if obj.get("PositiveTargeting") is not None else None,
-            "Documents": [Document.from_dict(_item) for _item in obj.get("Documents")] if obj.get("Documents") is not None else None,
+            "PositiveTargeting": PositiveTargeting.from_dict(obj["PositiveTargeting"]) if obj.get("PositiveTargeting") is not None else None,
+            "Documents": [Document.from_dict(_item) for _item in obj["Documents"]] if obj.get("Documents") is not None else None,
             "MaximumAgreementStartDate": obj.get("MaximumAgreementStartDate"),
             "CurrencyCode": obj.get("CurrencyCode"),
-            "RateCards": [RateCards.from_dict(_item) for _item in obj.get("RateCards")] if obj.get("RateCards") is not None else None,
+            "RateCards": [RateCards.from_dict(_item) for _item in obj["RateCards"]] if obj.get("RateCards") is not None else None,
             "Duration": obj.get("Duration"),
             "Price": obj.get("Price"),
-            "Grants": [Grant.from_dict(_item) for _item in obj.get("Grants")] if obj.get("Grants") is not None else None,
-            "Schedule": [Schedule.from_dict(_item) for _item in obj.get("Schedule")] if obj.get("Schedule") is not None else None
+            "Grants": [Grant.from_dict(_item) for _item in obj["Grants"]] if obj.get("Grants") is not None else None,
+            "Schedule": [Schedule.from_dict(_item) for _item in obj["Schedule"]] if obj.get("Schedule") is not None else None
         })
         return _obj
 
