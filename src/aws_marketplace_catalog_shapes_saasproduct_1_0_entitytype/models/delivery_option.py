@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.deployment_template import DeploymentTemplate
+from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.endpoint import Endpoint
 from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.targeting import Targeting
 from typing import Optional, Set
 from typing_extensions import Self
@@ -37,7 +38,10 @@ class DeliveryOption(BaseModel):
     usage_instructions: Optional[StrictStr] = Field(default=None, alias="UsageInstructions")
     visibility: Optional[StrictStr] = Field(default=None, alias="Visibility")
     targeting: Optional[Targeting] = Field(default=None, alias="Targeting")
-    __properties: ClassVar[List[str]] = ["Id", "Type", "FulfillmentUrl", "QuickLaunchEnabled", "LaunchUrl", "DeploymentTemplates", "UsageInstructions", "Visibility", "Targeting"]
+    api_type: Optional[StrictStr] = Field(default=None, alias="ApiType")
+    compatible_services: Optional[List[StrictStr]] = Field(default=None, alias="CompatibleServices")
+    endpoints: Optional[List[Endpoint]] = Field(default=None, alias="Endpoints")
+    __properties: ClassVar[List[str]] = ["Id", "Type", "FulfillmentUrl", "QuickLaunchEnabled", "LaunchUrl", "DeploymentTemplates", "UsageInstructions", "Visibility", "Targeting", "ApiType", "CompatibleServices", "Endpoints"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -88,6 +92,13 @@ class DeliveryOption(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of targeting
         if self.targeting:
             _dict['Targeting'] = self.targeting.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in endpoints (list)
+        _items = []
+        if self.endpoints:
+            for _item_endpoints in self.endpoints:
+                if _item_endpoints:
+                    _items.append(_item_endpoints.to_dict())
+            _dict['Endpoints'] = _items
         return _dict
 
     @classmethod
@@ -108,7 +119,10 @@ class DeliveryOption(BaseModel):
             "DeploymentTemplates": [DeploymentTemplate.from_dict(_item) for _item in obj["DeploymentTemplates"]] if obj.get("DeploymentTemplates") is not None else None,
             "UsageInstructions": obj.get("UsageInstructions"),
             "Visibility": obj.get("Visibility"),
-            "Targeting": Targeting.from_dict(obj["Targeting"]) if obj.get("Targeting") is not None else None
+            "Targeting": Targeting.from_dict(obj["Targeting"]) if obj.get("Targeting") is not None else None,
+            "ApiType": obj.get("ApiType"),
+            "CompatibleServices": obj.get("CompatibleServices"),
+            "Endpoints": [Endpoint.from_dict(_item) for _item in obj["Endpoints"]] if obj.get("Endpoints") is not None else None
         })
         return _obj
 

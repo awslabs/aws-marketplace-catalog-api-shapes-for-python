@@ -18,17 +18,19 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
+from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.add_api_delivery_option_details import AddApiDeliveryOptionDetails
 from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.add_saa_s_url_delivery_option_details import AddSaaSUrlDeliveryOptionDetails
 from typing import Optional, Set
 from typing_extensions import Self
 
 class AddDeliveryOptionDetails(BaseModel):
     """
-    AddDeliveryOptionDetails
+    One of [SaaSUrlDeliveryOptionDetails, ApiDeliveryOptionDetails] is required
     """ # noqa: E501
-    saa_s_url_delivery_option_details: AddSaaSUrlDeliveryOptionDetails = Field(alias="SaaSUrlDeliveryOptionDetails")
-    __properties: ClassVar[List[str]] = ["SaaSUrlDeliveryOptionDetails"]
+    saa_s_url_delivery_option_details: Optional[AddSaaSUrlDeliveryOptionDetails] = Field(default=None, alias="SaaSUrlDeliveryOptionDetails")
+    api_delivery_option_details: Optional[AddApiDeliveryOptionDetails] = Field(default=None, alias="ApiDeliveryOptionDetails")
+    __properties: ClassVar[List[str]] = ["SaaSUrlDeliveryOptionDetails", "ApiDeliveryOptionDetails"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -72,6 +74,9 @@ class AddDeliveryOptionDetails(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of saa_s_url_delivery_option_details
         if self.saa_s_url_delivery_option_details:
             _dict['SaaSUrlDeliveryOptionDetails'] = self.saa_s_url_delivery_option_details.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of api_delivery_option_details
+        if self.api_delivery_option_details:
+            _dict['ApiDeliveryOptionDetails'] = self.api_delivery_option_details.to_dict()
         return _dict
 
     @classmethod
@@ -84,7 +89,8 @@ class AddDeliveryOptionDetails(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "SaaSUrlDeliveryOptionDetails": AddSaaSUrlDeliveryOptionDetails.from_dict(obj["SaaSUrlDeliveryOptionDetails"]) if obj.get("SaaSUrlDeliveryOptionDetails") is not None else None
+            "SaaSUrlDeliveryOptionDetails": AddSaaSUrlDeliveryOptionDetails.from_dict(obj["SaaSUrlDeliveryOptionDetails"]) if obj.get("SaaSUrlDeliveryOptionDetails") is not None else None,
+            "ApiDeliveryOptionDetails": AddApiDeliveryOptionDetails.from_dict(obj["ApiDeliveryOptionDetails"]) if obj.get("ApiDeliveryOptionDetails") is not None else None
         })
         return _obj
 
