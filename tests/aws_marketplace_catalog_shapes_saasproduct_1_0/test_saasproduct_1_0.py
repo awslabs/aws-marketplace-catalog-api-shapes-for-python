@@ -13,6 +13,8 @@ def test_importable():
     from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.update_targeting_change_detail import UpdateTargetingChangeDetail  # noqa: F401
     from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.update_visibility_change_detail import UpdateVisibilityChangeDetail  # noqa: F401
     from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.restrict_dimension_change_detail import RestrictDimensionChangeDetail  # noqa: F401
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.add_api_delivery_option_details import AddApiDeliveryOptionDetails  # noqa: F401
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.update_api_delivery_option_details import UpdateApiDeliveryOptionDetails  # noqa: F401
 
     assert True
 
@@ -240,6 +242,148 @@ def test_saas_product_1_0_entity_detail_deserialization():
 
     assert actual_detail == expected_detail, "Deserialized object does not match expected object"
 
+def test_saas_product_1_0_api_delivery_option_entity_detail_deserialization():
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.saa_s_product_entity_detail import SaaSProductEntityDetail
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.description import Description
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.promotional_resources import PromotionalResources
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.support_information import SupportInformation
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.dimension import Dimension
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.version import Version
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.delivery_option import DeliveryOption
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.targeting import Targeting
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.positive_targeting import PositiveTargeting
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.endpoint import Endpoint
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.integration_protocol import IntegrationProtocol
+
+    expected_json = {
+        "Description": {
+            "ProductTitle": "API Test Product",
+            "ProductCode": "5cqs4jta6m2iuh6jak7s7bjsy",
+            "ShortDescription": "API test product",
+            "LongDescription": "API-based SaaS test product",
+            "Sku": "API-SKU",
+            "Highlights": ["MCP Server integration"],
+            "SearchKeywords": ["api", "mcp"],
+            "Visibility": "Public",
+            "ProductState": "Active",
+            "Categories": ["AI Services"]
+        },
+        "PromotionalResources": {
+            "LogoUrl": "https://s3.amazonaws.com/awsmp-logos/api-logo.png",
+            "Videos": [],
+            "AdditionalResources": []
+        },
+        "SupportInformation": {
+            "Description": "API product support information"
+        },
+        "Dimensions": [{
+            "Name": "API Calls",
+            "Description": "Number of API calls",
+            "Key": "ApiCalls",
+            "Unit": "Requests",
+            "Types": ["Metered"]
+        }],
+        "Versions": [{
+            "Id": "version-api123",
+            "DeliveryOptions": [{
+                "Id": "do-api123",
+                "Type": "ApiDelivery",
+                "ApiType": "MCP_SERVER",
+                "QuickLaunchEnabled": True,
+                "CompatibleServices": ["Bedrock-AgentCore"],
+                "FulfillmentUrl": "https://api.example.com/register",
+                "UsageInstructions": "Connect to our MCP server endpoint",
+                "Endpoints": [{
+                    "Name": "MainEndpoint",
+                    "EndpointUrl": "https://api.example.com/mcp",
+                    "Description": "Main MCP server endpoint",
+                    "AuthorizationTypes": ["API_KEY"],
+                    "Schemas": [],
+                    "IntegrationProtocols": [{
+                        "Type": "MCP",
+                        "UsageInstructions": "Use MCP protocol for integration"
+                    }]
+                }],
+                "Visibility": "Public"
+            }]
+        }],
+        "Targeting": {
+            "PositiveTargeting": {
+                "BuyerAccounts": ["123456789123"]
+            }
+        }
+    }
+
+    actual_detail = SaaSProductEntityDetail.from_json(json.dumps(expected_json))
+    expected_detail = SaaSProductEntityDetail(
+        description=Description(
+            product_title="API Test Product",
+            product_code="5cqs4jta6m2iuh6jak7s7bjsy",
+            short_description="API test product",
+            long_description="API-based SaaS test product",
+            highlights=["MCP Server integration"],
+            search_keywords=["api", "mcp"],
+            sku="API-SKU",
+            visibility="Public",
+            product_state="Active",
+            categories=["AI Services"]
+        ),
+        promotional_resources=PromotionalResources(
+            logo_url="https://s3.amazonaws.com/awsmp-logos/api-logo.png",
+            videos=[],
+            additional_resources=[]
+        ),
+        support_information=SupportInformation(description="API product support information"),
+        dimensions=[
+            Dimension(
+                name="API Calls",
+                description="Number of API calls",
+                key="ApiCalls",
+                unit="Requests",
+                types=["Metered"]
+            )
+        ],
+        versions=[
+            Version(
+                id="version-api123",
+                delivery_options=[
+                    DeliveryOption(
+                        id="do-api123",
+                        type="ApiDelivery",
+                        api_type="MCP_SERVER",
+                        quick_launch_enabled=True,
+                        compatible_services=["Bedrock-AgentCore"],
+                        fulfillment_url="https://api.example.com/register",
+                        usage_instructions="Connect to our MCP server endpoint",
+                        endpoints=[
+                            Endpoint(
+                                name="MainEndpoint",
+                                endpoint_url="https://api.example.com/mcp",
+                                description="Main MCP server endpoint",
+                                authorization_types=["API_KEY"],
+                                schemas=[],
+                                integration_protocols=[
+                                    IntegrationProtocol(
+                                        type="MCP",
+                                        usage_instructions="Use MCP protocol for integration"
+                                    )
+                                ]
+                            )
+                        ],
+                        visibility="Public"
+                    )
+                ]
+            )
+        ],
+        targeting=Targeting(
+            positive_targeting=PositiveTargeting(
+                buyer_accounts=["123456789123"]
+            )
+        )
+    )
+
+    assert actual_detail == expected_detail, "API delivery option deserialized object does not match expected object"
+
 def test_update_information_change_detail_serialization():
     from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.update_information_change_detail import UpdateInformationChangeDetail
     from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.additional_resource import AdditionalResource
@@ -332,6 +476,69 @@ def test_add_delivery_options_change_detail_serialization():
 
     assert actual_json == json.dumps(expected_json), "Generated AddDeliveryOptionsChangeDetail does not match expected json"
 
+def test_add_api_delivery_options_change_detail_serialization():
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.add_delivery_options_change_detail import AddDeliveryOptionsChangeDetail
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.add_delivery_option import AddDeliveryOption
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.add_delivery_option_details import AddDeliveryOptionDetails
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.add_api_delivery_option_details import AddApiDeliveryOptionDetails
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.api_endpoint import ApiEndpoint
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.integration_protocol import IntegrationProtocol
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.api_type import ApiType
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.authorization_type import AuthorizationType
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.protocol_type import ProtocolType
+
+    add_delivery_options_change_detail = AddDeliveryOptionsChangeDetail(
+        delivery_options=[AddDeliveryOption(
+            details=AddDeliveryOptionDetails(
+                api_delivery_option_details=AddApiDeliveryOptionDetails(
+                    api_type=ApiType.MCP_SERVER,
+                    quick_launch_enabled=True,
+                    compatible_services=["Bedrock-AgentCore"],
+                    fulfillment_url="https://api.example.com/register",
+                    usage_instructions="Connect to our MCP server endpoint",
+                    endpoints=[ApiEndpoint(
+                        name="MainEndpoint",
+                        endpoint_url="https://api.example.com/mcp",
+                        description="Main MCP server endpoint",
+                        authorization_types=[AuthorizationType.API_KEY],
+                        schemas=[],
+                        integration_protocols=[IntegrationProtocol(
+                            type=ProtocolType.MCP,
+                            usage_instructions="Use MCP protocol for integration"
+                        )]
+                    )]
+                )
+            )
+        )]
+    )
+    actual_json = add_delivery_options_change_detail.to_json()
+    expected_json = {
+        "DeliveryOptions": [{
+            "Details": {
+                "ApiDeliveryOptionDetails": {
+                    "ApiType": "MCP_SERVER",
+                    "QuickLaunchEnabled": True,
+                    "CompatibleServices": ["Bedrock-AgentCore"],
+                    "FulfillmentUrl": "https://api.example.com/register",
+                    "UsageInstructions": "Connect to our MCP server endpoint",
+                    "Endpoints": [{
+                        "Name": "MainEndpoint",
+                        "EndpointUrl": "https://api.example.com/mcp",
+                        "Description": "Main MCP server endpoint",
+                        "AuthorizationTypes": ["API_KEY"],
+                        "Schemas": [],
+                        "IntegrationProtocols": [{
+                            "Type": "MCP",
+                            "UsageInstructions": "Use MCP protocol for integration"
+                        }]
+                    }]
+                }
+            }
+        }]
+    }
+
+    assert actual_json == json.dumps(expected_json), "Generated API AddDeliveryOptionsChangeDetail does not match expected json"
+
 def test_update_delivery_options_change_detail_serialization():
     from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.update_delivery_options_change_detail import UpdateDeliveryOptionsChangeDetail
     from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.update_delivery_option import UpdateDeliveryOption
@@ -385,6 +592,46 @@ def test_update_delivery_options_change_detail_serialization():
     }
 
     assert actual_json == json.dumps(expected_json), "Generated UpdateDeliveryOptionsChangeDetail does not match expected json"
+
+def test_update_api_delivery_options_change_detail_serialization():
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.update_delivery_options_change_detail import UpdateDeliveryOptionsChangeDetail
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.update_delivery_option import UpdateDeliveryOption
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.update_delivery_option_details import UpdateDeliveryOptionDetails
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.update_api_delivery_option_details import UpdateApiDeliveryOptionDetails
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.api_endpoint import ApiEndpoint
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.authorization_type import AuthorizationType
+
+    update_delivery_options_change_detail = UpdateDeliveryOptionsChangeDetail(
+        delivery_options=[UpdateDeliveryOption(
+            id="do-api123456789",
+            details=UpdateDeliveryOptionDetails(
+                api_delivery_option_details=UpdateApiDeliveryOptionDetails(
+                    usage_instructions="Updated MCP server instructions",
+                    endpoints=[ApiEndpoint(
+                        endpoint_url="https://api.example.com/mcp/v2",
+                        authorization_types=[AuthorizationType.OAUTH2]
+                    )]
+                )
+            )
+        )]
+    )
+    actual_json = update_delivery_options_change_detail.to_json()
+    expected_json = {
+        "DeliveryOptions": [{
+            "Id": "do-api123456789",
+            "Details": {
+                "ApiDeliveryOptionDetails": {
+                    "UsageInstructions": "Updated MCP server instructions",
+                    "Endpoints": [{
+                        "EndpointUrl": "https://api.example.com/mcp/v2",
+                        "AuthorizationTypes": ["OAUTH2"]
+                    }]
+                }
+            }
+        }]
+    }
+
+    assert actual_json == json.dumps(expected_json), "Generated API UpdateDeliveryOptionsChangeDetail does not match expected json"
 
 def test_update_delivery_options_visibility_change_detail_serialization():
     from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.update_delivery_options_visibility_change_detail import UpdateDeliveryOptionsVisibilityChangeDetail
@@ -536,3 +783,74 @@ def test_release_product_change_detail_serialization():
     expected_json = {}
 
     assert actual_json == json.dumps(expected_json), "Generated ReleaseProductChangeDetail does not match expected json"
+
+def test_add_api_delivery_options_with_schemas_change_detail_serialization():
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.add_delivery_options_change_detail import AddDeliveryOptionsChangeDetail
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.add_delivery_option import AddDeliveryOption
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.add_delivery_option_details import AddDeliveryOptionDetails
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.add_api_delivery_option_details import AddApiDeliveryOptionDetails
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.api_endpoint import ApiEndpoint
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.integration_protocol import IntegrationProtocol
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.api_schema import ApiSchema
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.api_type import ApiType
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.authorization_type import AuthorizationType
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.protocol_type import ProtocolType
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.schema_type import SchemaType
+
+    add_delivery_options_change_detail = AddDeliveryOptionsChangeDetail(
+        delivery_options=[AddDeliveryOption(
+            details=AddDeliveryOptionDetails(
+                api_delivery_option_details=AddApiDeliveryOptionDetails(
+                    api_type=ApiType.MCP_SERVER,
+                    quick_launch_enabled=True,
+                    compatible_services=["Bedrock-AgentCore"],
+                    fulfillment_url="https://api.example.com/register",
+                    usage_instructions="Connect to our MCP server endpoint",
+                    endpoints=[ApiEndpoint(
+                        name="MainEndpoint",
+                        endpoint_url="https://api.example.com/mcp",
+                        description="Main MCP server endpoint",
+                        authorization_types=[AuthorizationType.API_KEY],
+                        schemas=[ApiSchema(
+                            type=SchemaType.OPEN_API,
+                            schema_url="https://api.example.com/schema.json"
+                        )],
+                        integration_protocols=[IntegrationProtocol(
+                            type=ProtocolType.MCP,
+                            usage_instructions="Use MCP protocol for integration"
+                        )]
+                    )]
+                )
+            )
+        )]
+    )
+    actual_json = add_delivery_options_change_detail.to_json()
+    expected_json = {
+        "DeliveryOptions": [{
+            "Details": {
+                "ApiDeliveryOptionDetails": {
+                    "ApiType": "MCP_SERVER",
+                    "QuickLaunchEnabled": True,
+                    "CompatibleServices": ["Bedrock-AgentCore"],
+                    "FulfillmentUrl": "https://api.example.com/register",
+                    "UsageInstructions": "Connect to our MCP server endpoint",
+                    "Endpoints": [{
+                        "Name": "MainEndpoint",
+                        "EndpointUrl": "https://api.example.com/mcp",
+                        "Description": "Main MCP server endpoint",
+                        "AuthorizationTypes": ["API_KEY"],
+                        "Schemas": [{
+                            "Type": "OPEN_API",
+                            "SchemaUrl": "https://api.example.com/schema.json"
+                        }],
+                        "IntegrationProtocols": [{
+                            "Type": "MCP",
+                            "UsageInstructions": "Use MCP protocol for integration"
+                        }]
+                    }]
+                }
+            }
+        }]
+    }
+
+    assert actual_json == json.dumps(expected_json), "Generated API AddDeliveryOptionsChangeDetail with schemas does not match expected json"

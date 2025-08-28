@@ -17,20 +17,27 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
-from typing import Any, ClassVar, Dict, List, Optional
-from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.update_api_delivery_option_details import UpdateApiDeliveryOptionDetails
-from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.update_saa_s_url_delivery_option_details import UpdateSaaSUrlDeliveryOptionDetails
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+from typing import Any, ClassVar, Dict, List
+from typing_extensions import Annotated
+from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.schema_type import SchemaType
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateDeliveryOptionDetails(BaseModel):
+class ApiSchema(BaseModel):
     """
-    UpdateDeliveryOptionDetails
+    ApiSchema
     """ # noqa: E501
-    saa_s_url_delivery_option_details: Optional[UpdateSaaSUrlDeliveryOptionDetails] = Field(default=None, alias="SaaSUrlDeliveryOptionDetails")
-    api_delivery_option_details: Optional[UpdateApiDeliveryOptionDetails] = Field(default=None, alias="ApiDeliveryOptionDetails")
-    __properties: ClassVar[List[str]] = ["SaaSUrlDeliveryOptionDetails", "ApiDeliveryOptionDetails"]
+    type: SchemaType = Field(alias="Type")
+    schema_url: Annotated[str, Field(min_length=8, strict=True, max_length=2048)] = Field(alias="SchemaUrl")
+    __properties: ClassVar[List[str]] = ["Type", "SchemaUrl"]
+
+    @field_validator('schema_url')
+    def schema_url_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if not re.match(r"https:\/\/.*", value):
+            raise ValueError(r"must validate the regular expression /https:\/\/.*/")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +57,7 @@ class UpdateDeliveryOptionDetails(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of UpdateDeliveryOptionDetails from a JSON string"""
+        """Create an instance of ApiSchema from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,17 +78,11 @@ class UpdateDeliveryOptionDetails(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of saa_s_url_delivery_option_details
-        if self.saa_s_url_delivery_option_details:
-            _dict['SaaSUrlDeliveryOptionDetails'] = self.saa_s_url_delivery_option_details.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of api_delivery_option_details
-        if self.api_delivery_option_details:
-            _dict['ApiDeliveryOptionDetails'] = self.api_delivery_option_details.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of UpdateDeliveryOptionDetails from a dict"""
+        """Create an instance of ApiSchema from a dict"""
         if obj is None:
             return None
 
@@ -89,8 +90,8 @@ class UpdateDeliveryOptionDetails(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "SaaSUrlDeliveryOptionDetails": UpdateSaaSUrlDeliveryOptionDetails.from_dict(obj["SaaSUrlDeliveryOptionDetails"]) if obj.get("SaaSUrlDeliveryOptionDetails") is not None else None,
-            "ApiDeliveryOptionDetails": UpdateApiDeliveryOptionDetails.from_dict(obj["ApiDeliveryOptionDetails"]) if obj.get("ApiDeliveryOptionDetails") is not None else None
+            "Type": obj.get("Type"),
+            "SchemaUrl": obj.get("SchemaUrl")
         })
         return _obj
 
