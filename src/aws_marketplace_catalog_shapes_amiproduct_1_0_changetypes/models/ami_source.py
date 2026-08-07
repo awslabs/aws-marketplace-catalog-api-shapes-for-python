@@ -29,7 +29,7 @@ class AmiSource(BaseModel):
     """ # noqa: E501
     ami_id: Annotated[str, Field(strict=True)] = Field(alias="AmiId")
     access_role_arn: Annotated[str, Field(strict=True)] = Field(alias="AccessRoleArn")
-    user_name: Annotated[str, Field(strict=True, max_length=100)] = Field(alias="UserName")
+    user_name: Annotated[str, Field(strict=True, max_length=32)] = Field(alias="UserName")
     scanning_port: Optional[Annotated[int, Field(le=65535, strict=True, ge=1)]] = Field(default=None, alias="ScanningPort")
     operating_system_name: Annotated[str, Field(strict=True, max_length=100)] = Field(alias="OperatingSystemName")
     operating_system_version: Annotated[str, Field(strict=True, max_length=100)] = Field(alias="OperatingSystemVersion")
@@ -52,8 +52,8 @@ class AmiSource(BaseModel):
     @field_validator('user_name')
     def user_name_validate_regular_expression(cls, value):
         """Validates the regular expression"""
-        if not re.match(r"^[\w\-_]+$", value):
-            raise ValueError(r"must validate the regular expression /^[\w\-_]+$/")
+        if not re.match(r"^[a-zA-Z][a-zA-Z0-9_-]{0,31}$", value):
+            raise ValueError(r"must validate the regular expression /^[a-zA-Z][a-zA-Z0-9_-]{0,31}$/")
         return value
 
     @field_validator('operating_system_name')

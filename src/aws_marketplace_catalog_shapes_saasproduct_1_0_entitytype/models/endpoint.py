@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.api_schema import ApiSchema
+from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.endpoint_url_parameter import EndpointUrlParameter
 from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.integration_protocol import IntegrationProtocol
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,12 +30,14 @@ class Endpoint(BaseModel):
     Endpoint
     """ # noqa: E501
     name: Optional[StrictStr] = Field(default=None, alias="Name")
+    endpoint_type: Optional[StrictStr] = Field(default=None, alias="EndpointType")
     endpoint_url: Optional[StrictStr] = Field(default=None, alias="EndpointUrl")
     description: Optional[StrictStr] = Field(default=None, alias="Description")
     authorization_types: Optional[List[StrictStr]] = Field(default=None, alias="AuthorizationTypes")
     schemas: Optional[List[ApiSchema]] = Field(default=None, alias="Schemas")
     integration_protocols: Optional[List[IntegrationProtocol]] = Field(default=None, alias="IntegrationProtocols")
-    __properties: ClassVar[List[str]] = ["Name", "EndpointUrl", "Description", "AuthorizationTypes", "Schemas", "IntegrationProtocols"]
+    endpoint_url_parameters: Optional[List[EndpointUrlParameter]] = Field(default=None, alias="EndpointUrlParameters")
+    __properties: ClassVar[List[str]] = ["Name", "EndpointType", "EndpointUrl", "Description", "AuthorizationTypes", "Schemas", "IntegrationProtocols", "EndpointUrlParameters"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -89,6 +92,13 @@ class Endpoint(BaseModel):
                 if _item_integration_protocols:
                     _items.append(_item_integration_protocols.to_dict())
             _dict['IntegrationProtocols'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in endpoint_url_parameters (list)
+        _items = []
+        if self.endpoint_url_parameters:
+            for _item_endpoint_url_parameters in self.endpoint_url_parameters:
+                if _item_endpoint_url_parameters:
+                    _items.append(_item_endpoint_url_parameters.to_dict())
+            _dict['EndpointUrlParameters'] = _items
         return _dict
 
     @classmethod
@@ -102,11 +112,13 @@ class Endpoint(BaseModel):
 
         _obj = cls.model_validate({
             "Name": obj.get("Name"),
+            "EndpointType": obj.get("EndpointType"),
             "EndpointUrl": obj.get("EndpointUrl"),
             "Description": obj.get("Description"),
             "AuthorizationTypes": obj.get("AuthorizationTypes"),
             "Schemas": [ApiSchema.from_dict(_item) for _item in obj["Schemas"]] if obj.get("Schemas") is not None else None,
-            "IntegrationProtocols": [IntegrationProtocol.from_dict(_item) for _item in obj["IntegrationProtocols"]] if obj.get("IntegrationProtocols") is not None else None
+            "IntegrationProtocols": [IntegrationProtocol.from_dict(_item) for _item in obj["IntegrationProtocols"]] if obj.get("IntegrationProtocols") is not None else None,
+            "EndpointUrlParameters": [EndpointUrlParameter.from_dict(_item) for _item in obj["EndpointUrlParameters"]] if obj.get("EndpointUrlParameters") is not None else None
         })
         return _obj
 

@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    ResaleAuthorization_1_0_ChangeTypes
+    SaaSProduct_1_0_ChangeTypes
 
         Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved. 
 
@@ -18,21 +18,20 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class UpdatePricingModel(str, Enum):
+class EndpointType(str, Enum):
     """
-    UpdatePricingModel
+    EndpointType
     """
 
     """
     allowed enum values
     """
-    FREE = 'Free'
-    USAGE = 'Usage'
-    CONTRACT = 'Contract'
+    STATIC = 'STATIC'
+    DYNAMIC = 'DYNAMIC'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of UpdatePricingModel from a JSON string"""
+        """Create an instance of EndpointType from a JSON string"""
         return cls(json.loads(json_str))
 
 

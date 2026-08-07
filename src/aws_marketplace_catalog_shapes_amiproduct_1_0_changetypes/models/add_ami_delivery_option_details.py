@@ -47,8 +47,8 @@ class AddAmiDeliveryOptionDetails(BaseModel):
     @field_validator('recommended_instance_type')
     def recommended_instance_type_validate_regular_expression(cls, value):
         """Validates the regular expression"""
-        if not re.match(r"^\S{1,24}$", value):
-            raise ValueError(r"must validate the regular expression /^\S{1,24}$/")
+        if not re.match(r"^[a-z]+[0-9]+[a-z]*\.[0-9]*[a-z]+$", value):
+            raise ValueError(r"must validate the regular expression /^[a-z]+[0-9]+[a-z]*\.[0-9]*[a-z]+$/")
         return value
 
     model_config = ConfigDict(

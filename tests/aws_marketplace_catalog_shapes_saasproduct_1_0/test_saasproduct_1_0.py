@@ -854,3 +854,200 @@ def test_add_api_delivery_options_with_schemas_change_detail_serialization():
     }
 
     assert actual_json == json.dumps(expected_json), "Generated API AddDeliveryOptionsChangeDetail with schemas does not match expected json"
+
+def test_add_api_delivery_options_with_dynamic_endpoint_change_detail_serialization():
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.add_delivery_options_change_detail import AddDeliveryOptionsChangeDetail
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.add_delivery_option import AddDeliveryOption
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.add_delivery_option_details import AddDeliveryOptionDetails
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.add_api_delivery_option_details import AddApiDeliveryOptionDetails
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.api_endpoint import ApiEndpoint
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.integration_protocol import IntegrationProtocol
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.endpoint_url_parameter import EndpointUrlParameter
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.api_type import ApiType
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.authorization_type import AuthorizationType
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.protocol_type import ProtocolType
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.endpoint_type import EndpointType
+
+    add_delivery_options_change_detail = AddDeliveryOptionsChangeDetail(
+        delivery_options=[AddDeliveryOption(
+            details=AddDeliveryOptionDetails(
+                api_delivery_option_details=AddApiDeliveryOptionDetails(
+                    api_type=ApiType.MCP_SERVER,
+                    quick_launch_enabled=True,
+                    compatible_services=["Bedrock-AgentCore"],
+                    fulfillment_url="https://api.example.com/register",
+                    usage_instructions="Connect to our MCP server endpoint",
+                    endpoints=[ApiEndpoint(
+                        name="DynamicEndpoint",
+                        endpoint_type=EndpointType.DYNAMIC,
+                        endpoint_url="https://api.example.com/v1/{tenantId}/agent",
+                        description="Dynamic MCP server endpoint",
+                        authorization_types=[AuthorizationType.API_KEY],
+                        integration_protocols=[IntegrationProtocol(
+                            type=ProtocolType.MCP,
+                            usage_instructions="Use MCP protocol for integration"
+                        )],
+                        endpoint_url_parameters=[EndpointUrlParameter(
+                            name="tenantId",
+                            description="Buyer tenant identifier",
+                            default_value="default-tenant"
+                        )]
+                    )]
+                )
+            )
+        )]
+    )
+    actual_json = add_delivery_options_change_detail.to_json()
+    expected_json = {
+        "DeliveryOptions": [{
+            "Details": {
+                "ApiDeliveryOptionDetails": {
+                    "ApiType": "MCP_SERVER",
+                    "QuickLaunchEnabled": True,
+                    "CompatibleServices": ["Bedrock-AgentCore"],
+                    "FulfillmentUrl": "https://api.example.com/register",
+                    "UsageInstructions": "Connect to our MCP server endpoint",
+                    "Endpoints": [{
+                        "Name": "DynamicEndpoint",
+                        "EndpointType": "DYNAMIC",
+                        "EndpointUrl": "https://api.example.com/v1/{tenantId}/agent",
+                        "Description": "Dynamic MCP server endpoint",
+                        "AuthorizationTypes": ["API_KEY"],
+                        "IntegrationProtocols": [{
+                            "Type": "MCP",
+                            "UsageInstructions": "Use MCP protocol for integration"
+                        }],
+                        "EndpointUrlParameters": [{
+                            "Name": "tenantId",
+                            "Description": "Buyer tenant identifier",
+                            "DefaultValue": "default-tenant"
+                        }]
+                    }]
+                }
+            }
+        }]
+    }
+
+    assert actual_json == json.dumps(expected_json), "Generated API AddDeliveryOptionsChangeDetail with dynamic endpoint does not match expected json"
+
+def test_saas_product_1_0_api_delivery_option_with_dynamic_endpoint_entity_detail_deserialization():
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.saa_s_product_entity_detail import SaaSProductEntityDetail
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.description import Description
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.version import Version
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.delivery_option import DeliveryOption
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.targeting import Targeting
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.positive_targeting import PositiveTargeting
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.endpoint import Endpoint
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.integration_protocol import IntegrationProtocol
+    from aws_marketplace_catalog_shapes_saasproduct_1_0_entitytype.models.endpoint_url_parameter import EndpointUrlParameter
+
+    expected_json = {
+        "Description": {
+            "ProductTitle": "API Test Product",
+            "ProductCode": "5cqs4jta6m2iuh6jak7s7bjsy",
+            "ShortDescription": "API test product",
+            "LongDescription": "API-based SaaS test product",
+            "Sku": "API-SKU",
+            "Highlights": ["MCP Server integration"],
+            "SearchKeywords": ["api", "mcp"],
+            "Visibility": "Public",
+            "ProductState": "Active",
+            "Categories": ["AI Services"]
+        },
+        "Versions": [{
+            "Id": "version-api123",
+            "DeliveryOptions": [{
+                "Id": "do-api123",
+                "Type": "ApiDelivery",
+                "ApiType": "MCP_SERVER",
+                "QuickLaunchEnabled": True,
+                "CompatibleServices": ["Bedrock-AgentCore"],
+                "FulfillmentUrl": "https://api.example.com/register",
+                "UsageInstructions": "Connect to our MCP server endpoint",
+                "Endpoints": [{
+                    "Name": "DynamicEndpoint",
+                    "EndpointType": "DYNAMIC",
+                    "EndpointUrl": "https://api.example.com/v1/{tenantId}/agent",
+                    "Description": "Dynamic MCP server endpoint",
+                    "AuthorizationTypes": ["API_KEY"],
+                    "IntegrationProtocols": [{
+                        "Type": "MCP",
+                        "UsageInstructions": "Use MCP protocol for integration"
+                    }],
+                    "EndpointUrlParameters": [{
+                        "Name": "tenantId",
+                        "Description": "Buyer tenant identifier",
+                        "DefaultValue": "default-tenant"
+                    }]
+                }],
+                "Visibility": "Public"
+            }]
+        }],
+        "Targeting": {
+            "PositiveTargeting": {
+                "BuyerAccounts": ["123456789123"]
+            }
+        }
+    }
+
+    actual_detail = SaaSProductEntityDetail.from_json(json.dumps(expected_json))
+    expected_detail = SaaSProductEntityDetail(
+        description=Description(
+            product_title="API Test Product",
+            product_code="5cqs4jta6m2iuh6jak7s7bjsy",
+            short_description="API test product",
+            long_description="API-based SaaS test product",
+            highlights=["MCP Server integration"],
+            search_keywords=["api", "mcp"],
+            sku="API-SKU",
+            visibility="Public",
+            product_state="Active",
+            categories=["AI Services"]
+        ),
+        versions=[
+            Version(
+                id="version-api123",
+                delivery_options=[
+                    DeliveryOption(
+                        id="do-api123",
+                        type="ApiDelivery",
+                        api_type="MCP_SERVER",
+                        quick_launch_enabled=True,
+                        compatible_services=["Bedrock-AgentCore"],
+                        fulfillment_url="https://api.example.com/register",
+                        usage_instructions="Connect to our MCP server endpoint",
+                        endpoints=[
+                            Endpoint(
+                                name="DynamicEndpoint",
+                                endpoint_type="DYNAMIC",
+                                endpoint_url="https://api.example.com/v1/{tenantId}/agent",
+                                description="Dynamic MCP server endpoint",
+                                authorization_types=["API_KEY"],
+                                integration_protocols=[
+                                    IntegrationProtocol(
+                                        type="MCP",
+                                        usage_instructions="Use MCP protocol for integration"
+                                    )
+                                ],
+                                endpoint_url_parameters=[
+                                    EndpointUrlParameter(
+                                        name="tenantId",
+                                        description="Buyer tenant identifier",
+                                        default_value="default-tenant"
+                                    )
+                                ]
+                            )
+                        ],
+                        visibility="Public"
+                    )
+                ]
+            )
+        ],
+        targeting=Targeting(
+            positive_targeting=PositiveTargeting(
+                buyer_accounts=["123456789123"]
+            )
+        )
+    )
+
+    assert actual_detail == expected_detail, "Dynamic endpoint API delivery option deserialized object does not match expected object"
