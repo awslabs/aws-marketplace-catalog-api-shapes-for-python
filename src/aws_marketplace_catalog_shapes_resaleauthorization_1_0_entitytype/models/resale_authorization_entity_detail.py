@@ -35,6 +35,7 @@ class ResaleAuthorizationEntityDetail(BaseModel):
     description: Optional[StrictStr] = Field(default=None, alias="Description")
     product_id: Optional[StrictStr] = Field(default=None, alias="ProductId")
     product_name: Optional[StrictStr] = Field(default=None, alias="ProductName")
+    pricing_model: Optional[StrictStr] = Field(default=None, alias="PricingModel")
     status: Optional[StrictStr] = Field(default=None, alias="Status")
     pre_existing_buyer_agreement: Optional[PreExistingBuyerAgreement] = Field(default=None, alias="PreExistingBuyerAgreement")
     dimensions: Optional[List[Dimension]] = Field(default=None, alias="Dimensions")
@@ -44,7 +45,7 @@ class ResaleAuthorizationEntityDetail(BaseModel):
     created_date: Optional[StrictStr] = Field(default=None, alias="CreatedDate")
     manufacturer_legal_name: Optional[StrictStr] = Field(default=None, alias="ManufacturerLegalName")
     manufacturer_account_id: Optional[StrictStr] = Field(default=None, alias="ManufacturerAccountId")
-    __properties: ClassVar[List[str]] = ["Name", "Description", "ProductId", "ProductName", "Status", "PreExistingBuyerAgreement", "Dimensions", "OfferDetails", "Terms", "Rules", "CreatedDate", "ManufacturerLegalName", "ManufacturerAccountId"]
+    __properties: ClassVar[List[str]] = ["Name", "Description", "ProductId", "ProductName", "PricingModel", "Status", "PreExistingBuyerAgreement", "Dimensions", "OfferDetails", "Terms", "Rules", "CreatedDate", "ManufacturerLegalName", "ManufacturerAccountId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -128,6 +129,7 @@ class ResaleAuthorizationEntityDetail(BaseModel):
             "Description": obj.get("Description"),
             "ProductId": obj.get("ProductId"),
             "ProductName": obj.get("ProductName"),
+            "PricingModel": obj.get("PricingModel"),
             "Status": obj.get("Status"),
             "PreExistingBuyerAgreement": PreExistingBuyerAgreement.from_dict(obj["PreExistingBuyerAgreement"]) if obj.get("PreExistingBuyerAgreement") is not None else None,
             "Dimensions": [Dimension.from_dict(_item) for _item in obj["Dimensions"]] if obj.get("Dimensions") is not None else None,

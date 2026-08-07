@@ -36,6 +36,7 @@ def test_resale_authorization_1_0_entity_detail_deserialization():
         "Description": "Canary test description",
         "ProductId": "b199549a-6c5d-49a0-8217-607972c6f4f9",
         "ProductName": "Channel CAPI Integ Test Product (SaaS CCP)",
+        "PricingModel": "Contract",
         "Status": "Active",
         "PreExistingBuyerAgreement": {
             "AcquisitionChannel": "Unknown",
@@ -185,6 +186,7 @@ def test_resale_authorization_1_0_entity_detail_deserialization():
         description="Canary test description",
         product_id="b199549a-6c5d-49a0-8217-607972c6f4f9",
         product_name="Channel CAPI Integ Test Product (SaaS CCP)",
+        pricing_model="Contract",
         status="Active",
         pre_existing_buyer_agreement=PreExistingBuyerAgreement(
             acquisition_channel="Unknown",

@@ -34,7 +34,7 @@ class AddApiDeliveryOptionDetails(BaseModel):
     quick_launch_enabled: StrictBool = Field(alias="QuickLaunchEnabled")
     compatible_services: Optional[Annotated[List[CompatibleService], Field(min_length=0, max_length=1)]] = Field(default=None, alias="CompatibleServices")
     fulfillment_url: Annotated[str, Field(min_length=8, strict=True, max_length=2048)] = Field(alias="FulfillmentUrl")
-    usage_instructions: Annotated[str, Field(strict=True, max_length=30000)] = Field(alias="UsageInstructions")
+    usage_instructions: Optional[Annotated[str, Field(strict=True, max_length=30000)]] = Field(default=None, alias="UsageInstructions")
     endpoints: Annotated[List[ApiEndpoint], Field(min_length=1, max_length=1)] = Field(alias="Endpoints")
     __properties: ClassVar[List[str]] = ["ApiType", "QuickLaunchEnabled", "CompatibleServices", "FulfillmentUrl", "UsageInstructions", "Endpoints"]
 

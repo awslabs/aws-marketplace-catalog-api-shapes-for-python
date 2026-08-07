@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    ResaleAuthorization_1_0_ChangeTypes
+    SaaSProduct_1_0_ChangeTypes
 
         Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved. 
 
@@ -17,21 +17,37 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.pricing_term import PricingTerm
-from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.update_pricing_model import UpdatePricingModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdatePricingTermsChangeDetail(BaseModel):
+class EndpointUrlParameter(BaseModel):
     """
-    UpdatePricingTermsChangeDetail
+    EndpointUrlParameter
     """ # noqa: E501
-    pricing_model: UpdatePricingModel = Field(alias="PricingModel")
-    terms: Annotated[List[PricingTerm], Field(min_length=0)] = Field(alias="Terms")
-    __properties: ClassVar[List[str]] = ["PricingModel", "Terms"]
+    name: Annotated[str, Field(min_length=1, strict=True, max_length=100)] = Field(alias="Name")
+    description: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=1000)]] = Field(default=None, alias="Description")
+    default_value: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=256)]] = Field(default=None, alias="DefaultValue")
+    __properties: ClassVar[List[str]] = ["Name", "Description", "DefaultValue"]
+
+    @field_validator('name')
+    def name_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if not re.match(r"^[a-zA-Z][a-zA-Z0-9_]*$", value):
+            raise ValueError(r"must validate the regular expression /^[a-zA-Z][a-zA-Z0-9_]*$/")
+        return value
+
+    @field_validator('default_value')
+    def default_value_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if value is None:
+            return value
+
+        if not re.match(r"^[a-zA-Z0-9._~-]+$", value):
+            raise ValueError(r"must validate the regular expression /^[a-zA-Z0-9._~-]+$/")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +67,7 @@ class UpdatePricingTermsChangeDetail(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of UpdatePricingTermsChangeDetail from a JSON string"""
+        """Create an instance of EndpointUrlParameter from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,18 +88,11 @@ class UpdatePricingTermsChangeDetail(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in terms (list)
-        _items = []
-        if self.terms:
-            for _item_terms in self.terms:
-                if _item_terms:
-                    _items.append(_item_terms.to_dict())
-            _dict['Terms'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of UpdatePricingTermsChangeDetail from a dict"""
+        """Create an instance of EndpointUrlParameter from a dict"""
         if obj is None:
             return None
 
@@ -91,8 +100,9 @@ class UpdatePricingTermsChangeDetail(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "PricingModel": obj.get("PricingModel"),
-            "Terms": [PricingTerm.from_dict(_item) for _item in obj["Terms"]] if obj.get("Terms") is not None else None
+            "Name": obj.get("Name"),
+            "Description": obj.get("Description"),
+            "DefaultValue": obj.get("DefaultValue")
         })
         return _obj
 

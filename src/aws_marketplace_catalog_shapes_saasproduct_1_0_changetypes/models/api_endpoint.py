@@ -22,6 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.api_schema import ApiSchema
 from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.authorization_type import AuthorizationType
+from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.endpoint_type import EndpointType
+from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.endpoint_url_parameter import EndpointUrlParameter
 from aws_marketplace_catalog_shapes_saasproduct_1_0_changetypes.models.integration_protocol import IntegrationProtocol
 from typing import Optional, Set
 from typing_extensions import Self
@@ -31,12 +33,14 @@ class ApiEndpoint(BaseModel):
     ApiEndpoint
     """ # noqa: E501
     name: Optional[Annotated[str, Field(strict=True, max_length=100)]] = Field(default=None, alias="Name")
+    endpoint_type: Optional[EndpointType] = Field(default=None, alias="EndpointType")
     endpoint_url: Annotated[str, Field(min_length=8, strict=True, max_length=2048)] = Field(alias="EndpointUrl")
     description: Optional[Annotated[str, Field(strict=True, max_length=4000)]] = Field(default=None, alias="Description")
     authorization_types: Annotated[List[AuthorizationType], Field(min_length=1, max_length=2)] = Field(alias="AuthorizationTypes")
     schemas: Optional[Annotated[List[ApiSchema], Field(min_length=0, max_length=1)]] = Field(default=None, alias="Schemas")
     integration_protocols: Optional[Annotated[List[IntegrationProtocol], Field(min_length=0, max_length=2)]] = Field(default=None, alias="IntegrationProtocols")
-    __properties: ClassVar[List[str]] = ["Name", "EndpointUrl", "Description", "AuthorizationTypes", "Schemas", "IntegrationProtocols"]
+    endpoint_url_parameters: Optional[Annotated[List[EndpointUrlParameter], Field(min_length=1, max_length=5)]] = Field(default=None, alias="EndpointUrlParameters")
+    __properties: ClassVar[List[str]] = ["Name", "EndpointType", "EndpointUrl", "Description", "AuthorizationTypes", "Schemas", "IntegrationProtocols", "EndpointUrlParameters"]
 
     @field_validator('name')
     def name_validate_regular_expression(cls, value):
@@ -108,6 +112,13 @@ class ApiEndpoint(BaseModel):
                 if _item_integration_protocols:
                     _items.append(_item_integration_protocols.to_dict())
             _dict['IntegrationProtocols'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in endpoint_url_parameters (list)
+        _items = []
+        if self.endpoint_url_parameters:
+            for _item_endpoint_url_parameters in self.endpoint_url_parameters:
+                if _item_endpoint_url_parameters:
+                    _items.append(_item_endpoint_url_parameters.to_dict())
+            _dict['EndpointUrlParameters'] = _items
         return _dict
 
     @classmethod
@@ -121,11 +132,13 @@ class ApiEndpoint(BaseModel):
 
         _obj = cls.model_validate({
             "Name": obj.get("Name"),
+            "EndpointType": obj.get("EndpointType"),
             "EndpointUrl": obj.get("EndpointUrl"),
             "Description": obj.get("Description"),
             "AuthorizationTypes": obj.get("AuthorizationTypes"),
             "Schemas": [ApiSchema.from_dict(_item) for _item in obj["Schemas"]] if obj.get("Schemas") is not None else None,
-            "IntegrationProtocols": [IntegrationProtocol.from_dict(_item) for _item in obj["IntegrationProtocols"]] if obj.get("IntegrationProtocols") is not None else None
+            "IntegrationProtocols": [IntegrationProtocol.from_dict(_item) for _item in obj["IntegrationProtocols"]] if obj.get("IntegrationProtocols") is not None else None,
+            "EndpointUrlParameters": [EndpointUrlParameter.from_dict(_item) for _item in obj["EndpointUrlParameters"]] if obj.get("EndpointUrlParameters") is not None else None
         })
         return _obj
 
