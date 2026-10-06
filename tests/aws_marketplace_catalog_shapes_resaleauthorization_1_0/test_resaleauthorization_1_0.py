@@ -11,6 +11,9 @@ def test_importable():
     from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.update_legal_terms_change_detail import UpdateLegalTermsChangeDetail  # noqa: F401
     from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.update_pricing_terms_change_detail import UpdatePricingTermsChangeDetail  # noqa: F401
     from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.update_payment_schedule_terms_change_detail import UpdatePaymentScheduleTermsChangeDetail  # noqa: F401
+    from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.update_net_payment_terms_change_detail import UpdateNetPaymentTermsChangeDetail  # noqa: F401
+    from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.create_resale_authorization_using_resale_authorization_change_detail import CreateResaleAuthorizationUsingResaleAuthorizationChangeDetail  # noqa: F401
+    from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.update_partner_targeting_terms_change_detail import UpdatePartnerTargetingTermsChangeDetail  # noqa: F401
 
     assert True
 
@@ -29,12 +32,14 @@ def test_resale_authorization_1_0_entity_detail_deserialization():
     from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.document import Document
     from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.positive_targeting import PositiveTargeting
     from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.buyer_account import BuyerAccount
+    from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.partner_account import PartnerAccount
     from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.rule import Rule
 
     expected_json = {
         "Name": "CanaryTestOpportunityBackFillCustomDimension",
         "Description": "Canary test description",
         "ProductId": "b199549a-6c5d-49a0-8217-607972c6f4f9",
+        "ProductArn": "arn:aws:aws-marketplace:us-east-1:123456789123:AWSMarketplace/SaaSProduct/b199549a-6c5d-49a0-8217-607972c6f4f9",
         "ProductName": "Channel CAPI Integ Test Product (SaaS CCP)",
         "PricingModel": "Contract",
         "Status": "Active",
@@ -42,6 +47,7 @@ def test_resale_authorization_1_0_entity_detail_deserialization():
             "AcquisitionChannel": "Unknown",
             "PricingModel": "Unknown"
         },
+        "SourceAuthorization": "arn:aws:aws-marketplace:us-east-1:123456789123:AWSMarketplace/ResaleAuthorization/resaleauthz-source123",
         "Dimensions": [{
             "Name": "Protected Resources",
             "Description": "Additional 100 protected resources",
@@ -136,6 +142,10 @@ def test_resale_authorization_1_0_entity_detail_deserialization():
                 "ChargeAmount": "200.00"
             }]
         }, {
+            "Type": "ResaleNetPaymentTerm",
+            "Id": "term_id_placeholder",
+            "PaymentDuePeriod": "P60D"
+        }, {
             "Type": "BuyerLegalTerm",
             "Id": "term_id_placeholder",
             "Documents": [{
@@ -162,6 +172,15 @@ def test_resale_authorization_1_0_entity_detail_deserialization():
                     "LegalName": "Buyer Account"
                 }]
             }
+        }, {
+            "Type": "PartnerTargetingTerm",
+            "Id": "term_id_placeholder",
+            "PositiveTargeting": {
+                "PartnerAccounts": [{
+                    "AwsAccountId": "987654321098",
+                    "LegalName": "Partner Account"
+                }]
+            }
         }],
         "Rules": [{
             "Type": "AvailabilityRule",
@@ -173,11 +192,14 @@ def test_resale_authorization_1_0_entity_detail_deserialization():
             "Type": "PartnerTargetingRule",
             "Id": "partner_targeting_rule_id_placeholder",
             "ResellerAccountId": "123456789123",
-            "ResellerLegalName": "ChannelCAPICP.Inc"
+            "ResellerLegalName": "ChannelCAPICP.Inc",
+            "ResellerRole": "ChannelPartner"
         }],
         "CreatedDate": "2023-09-12T14:15:02.000Z",
         "ManufacturerLegalName": "ChannelCAPI.Inc",
-        "ManufacturerAccountId": "123456789123"
+        "ManufacturerAccountId": "123456789123",
+        "IssuerAccountId": "111122223333",
+        "IssuerLegalName": "Test Issuer"
     }
 
     actual_detail = ResaleAuthorizationEntityDetail.from_json(json.dumps(expected_json))
@@ -185,6 +207,7 @@ def test_resale_authorization_1_0_entity_detail_deserialization():
         name="CanaryTestOpportunityBackFillCustomDimension",
         description="Canary test description",
         product_id="b199549a-6c5d-49a0-8217-607972c6f4f9",
+        product_arn="arn:aws:aws-marketplace:us-east-1:123456789123:AWSMarketplace/SaaSProduct/b199549a-6c5d-49a0-8217-607972c6f4f9",
         product_name="Channel CAPI Integ Test Product (SaaS CCP)",
         pricing_model="Contract",
         status="Active",
@@ -192,6 +215,7 @@ def test_resale_authorization_1_0_entity_detail_deserialization():
             acquisition_channel="Unknown",
             pricing_model="Unknown"
         ),
+        source_authorization="arn:aws:aws-marketplace:us-east-1:123456789123:AWSMarketplace/ResaleAuthorization/resaleauthz-source123",
         dimensions=[
             Dimension(
                 name="Protected Resources",
@@ -313,6 +337,11 @@ def test_resale_authorization_1_0_entity_detail_deserialization():
                 ]
             ),
             Term(
+                type="ResaleNetPaymentTerm",
+                id="term_id_placeholder",
+                payment_due_period="P60D"
+            ),
+            Term(
                 type="BuyerLegalTerm",
                 id="term_id_placeholder",
                 documents=[
@@ -348,6 +377,18 @@ def test_resale_authorization_1_0_entity_detail_deserialization():
                         )
                     ]
                 )
+            ),
+            Term(
+                type="PartnerTargetingTerm",
+                id="term_id_placeholder",
+                positive_targeting=PositiveTargeting(
+                    partner_accounts=[
+                        PartnerAccount(
+                            aws_account_id="987654321098",
+                            legal_name="Partner Account"
+                        )
+                    ]
+                )
             )
         ],
         rules=[
@@ -362,31 +403,37 @@ def test_resale_authorization_1_0_entity_detail_deserialization():
                 type="PartnerTargetingRule",
                 id="partner_targeting_rule_id_placeholder",
                 reseller_account_id="123456789123",
-                reseller_legal_name="ChannelCAPICP.Inc"
+                reseller_legal_name="ChannelCAPICP.Inc",
+                reseller_role="ChannelPartner"
             )
         ],
         created_date="2023-09-12T14:15:02.000Z",
         manufacturer_legal_name="ChannelCAPI.Inc",
-        manufacturer_account_id="123456789123"
+        manufacturer_account_id="123456789123",
+        issuer_account_id="111122223333",
+        issuer_legal_name="Test Issuer"
     )
 
     assert actual_detail == expected_detail, "Deserialized object does not match expected object"
 
 def test_create_resale_authorization_change_detail_serialization():
     from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.create_resale_authorization_change_detail import CreateResaleAuthorizationChangeDetail
+    from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.reseller_role import ResellerRole
 
     create_resale_authorization_change_detail = CreateResaleAuthorizationChangeDetail(
         product_id="ProductId",
         name="Name",
         description="Description",
-        reseller_account_id="123456789012"
+        reseller_account_id="123456789012",
+        reseller_role=ResellerRole.DISTRIBUTOR
     )
     actual_json = create_resale_authorization_change_detail.to_json()
     expected_json = {
         "Name": "Name",
         "Description": "Description",
         "ProductId": "ProductId",
-        "ResellerAccountId": "123456789012"
+        "ResellerAccountId": "123456789012",
+        "ResellerRole": "Distributor"
     }
 
     assert actual_json == json.dumps(expected_json), "Generated CreateResaleAuthorizationChangeDetail does not match expected json"
@@ -683,6 +730,27 @@ def test_update_payment_schedule_terms_change_detail_serialization():
 
     assert actual_json == json.dumps(expected_json), "Generated UpdatePaymentScheduleTermsChangeDetail does not match expected json"
 
+def test_update_net_payment_terms_change_detail_serialization():
+    from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.update_net_payment_terms_change_detail import UpdateNetPaymentTermsChangeDetail
+    from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.update_net_payment_term import UpdateNetPaymentTerm
+    from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.resale_net_payment_term_type import ResaleNetPaymentTermType
+
+    update_net_payment_terms_change_detail = UpdateNetPaymentTermsChangeDetail(
+        terms=[UpdateNetPaymentTerm(
+            type=ResaleNetPaymentTermType.RESALENETPAYMENTTERM,
+            payment_due_period="P60D"
+        )]
+    )
+    actual_json = update_net_payment_terms_change_detail.to_json()
+    expected_json = {
+        "Terms": [{
+            "Type": "ResaleNetPaymentTerm",
+            "PaymentDuePeriod": "P60D"
+        }]
+    }
+
+    assert actual_json == json.dumps(expected_json), "Generated UpdateNetPaymentTermsChangeDetail does not match expected json"
+
 def test_release_resale_authorization_change_detail_serialization():
     from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.release_resale_authorization_change_detail import ReleaseResaleAuthorizationChangeDetail
 
@@ -700,3 +768,51 @@ def test_restrict_resale_authorization_change_detail_serialization():
     expected_json = {}
 
     assert actual_json == json.dumps(expected_json), "Generated RestrictResaleAuthorizationChangeDetail does not match expected json"
+
+def test_create_resale_authorization_using_resale_authorization_change_detail_serialization():
+    from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.create_resale_authorization_using_resale_authorization_change_detail import CreateResaleAuthorizationUsingResaleAuthorizationChangeDetail
+    from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.create_using_resale_authorization_reseller_role import CreateUsingResaleAuthorizationResellerRole
+
+    create_resale_authorization_using_resale_authorization_change_detail = CreateResaleAuthorizationUsingResaleAuthorizationChangeDetail(
+        resale_authorization_id="resaleauthz-1234567890abc",
+        name="Name",
+        description="Description",
+        reseller_account_id="123456789012",
+        reseller_role=CreateUsingResaleAuthorizationResellerRole.CHANNELPARTNER
+    )
+    actual_json = create_resale_authorization_using_resale_authorization_change_detail.to_json()
+    expected_json = {
+        "Name": "Name",
+        "Description": "Description",
+        "ResaleAuthorizationId": "resaleauthz-1234567890abc",
+        "ResellerAccountId": "123456789012",
+        "ResellerRole": "ChannelPartner"
+    }
+
+    assert actual_json == json.dumps(expected_json), "Generated CreateResaleAuthorizationUsingResaleAuthorizationChangeDetail does not match expected json"
+
+def test_update_partner_targeting_terms_change_detail_serialization():
+    from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.update_partner_targeting_terms_change_detail import UpdatePartnerTargetingTermsChangeDetail
+    from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.partner_targeting_term import PartnerTargetingTerm
+    from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.partner_targeting_term_type import PartnerTargetingTermType
+    from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.partner_positive_targeting import PartnerPositiveTargeting
+
+    update_partner_targeting_terms_change_detail = UpdatePartnerTargetingTermsChangeDetail(
+        terms=[PartnerTargetingTerm(
+            type=PartnerTargetingTermType.PARTNERTARGETINGTERM,
+            positive_targeting=PartnerPositiveTargeting(
+                partner_accounts=["218196967966"]
+            )
+        )]
+    )
+    actual_json = update_partner_targeting_terms_change_detail.to_json()
+    expected_json = {
+        "Terms": [{
+            "Type": "PartnerTargetingTerm",
+            "PositiveTargeting": {
+                "PartnerAccounts": ["218196967966"]
+            }
+        }]
+    }
+
+    assert actual_json == json.dumps(expected_json), "Generated UpdatePartnerTargetingTermsChangeDetail does not match expected json"

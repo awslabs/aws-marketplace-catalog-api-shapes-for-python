@@ -42,7 +42,8 @@ class Term(BaseModel):
     price: Optional[StrictStr] = Field(default=None, alias="Price")
     grants: Optional[List[Grant]] = Field(default=None, alias="Grants")
     schedule: Optional[List[Schedule]] = Field(default=None, alias="Schedule")
-    __properties: ClassVar[List[str]] = ["Type", "Id", "PositiveTargeting", "Documents", "MaximumAgreementStartDate", "CurrencyCode", "RateCards", "Duration", "Price", "Grants", "Schedule"]
+    payment_due_period: Optional[StrictStr] = Field(default=None, alias="PaymentDuePeriod")
+    __properties: ClassVar[List[str]] = ["Type", "Id", "PositiveTargeting", "Documents", "MaximumAgreementStartDate", "CurrencyCode", "RateCards", "Duration", "Price", "Grants", "Schedule", "PaymentDuePeriod"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -136,7 +137,8 @@ class Term(BaseModel):
             "Duration": obj.get("Duration"),
             "Price": obj.get("Price"),
             "Grants": [Grant.from_dict(_item) for _item in obj["Grants"]] if obj.get("Grants") is not None else None,
-            "Schedule": [Schedule.from_dict(_item) for _item in obj["Schedule"]] if obj.get("Schedule") is not None else None
+            "Schedule": [Schedule.from_dict(_item) for _item in obj["Schedule"]] if obj.get("Schedule") is not None else None,
+            "PaymentDuePeriod": obj.get("PaymentDuePeriod")
         })
         return _obj
 

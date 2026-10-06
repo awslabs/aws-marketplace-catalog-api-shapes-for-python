@@ -18,25 +18,19 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class UpdatePaymentScheduleTermCurrencyCode(str, Enum):
+class PartnerTargetingTermType(str, Enum):
     """
-    UpdatePaymentScheduleTermCurrencyCode
+    PartnerTargetingTermType
     """
 
     """
     allowed enum values
     """
-    USD = 'USD'
-    AUD = 'AUD'
-    EUR = 'EUR'
-    GBP = 'GBP'
-    JPY = 'JPY'
-    CAD = 'CAD'
-    INR = 'INR'
+    PARTNERTARGETINGTERM = 'PartnerTargetingTerm'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of UpdatePaymentScheduleTermCurrencyCode from a JSON string"""
+        """Create an instance of PartnerTargetingTermType from a JSON string"""
         return cls(json.loads(json_str))
 
 

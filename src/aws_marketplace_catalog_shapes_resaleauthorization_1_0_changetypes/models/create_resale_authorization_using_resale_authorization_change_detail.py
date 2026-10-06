@@ -20,20 +20,20 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.reseller_role import ResellerRole
+from aws_marketplace_catalog_shapes_resaleauthorization_1_0_changetypes.models.create_using_resale_authorization_reseller_role import CreateUsingResaleAuthorizationResellerRole
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateResaleAuthorizationChangeDetail(BaseModel):
+class CreateResaleAuthorizationUsingResaleAuthorizationChangeDetail(BaseModel):
     """
-    CreateResaleAuthorizationChangeDetail
+    CreateResaleAuthorizationUsingResaleAuthorizationChangeDetail
     """ # noqa: E501
     name: Annotated[str, Field(min_length=1, strict=True, max_length=100)] = Field(alias="Name")
     description: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=255)]] = Field(default=None, alias="Description")
-    product_id: Annotated[str, Field(min_length=1, strict=True, max_length=50)] = Field(alias="ProductId")
+    resale_authorization_id: Annotated[str, Field(min_length=1, strict=True, max_length=50)] = Field(alias="ResaleAuthorizationId")
     reseller_account_id: Annotated[str, Field(strict=True)] = Field(alias="ResellerAccountId")
-    reseller_role: Optional[ResellerRole] = Field(default=None, alias="ResellerRole")
-    __properties: ClassVar[List[str]] = ["Name", "Description", "ProductId", "ResellerAccountId", "ResellerRole"]
+    reseller_role: CreateUsingResaleAuthorizationResellerRole = Field(alias="ResellerRole")
+    __properties: ClassVar[List[str]] = ["Name", "Description", "ResaleAuthorizationId", "ResellerAccountId", "ResellerRole"]
 
     @field_validator('name')
     def name_validate_regular_expression(cls, value):
@@ -77,7 +77,7 @@ class CreateResaleAuthorizationChangeDetail(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateResaleAuthorizationChangeDetail from a JSON string"""
+        """Create an instance of CreateResaleAuthorizationUsingResaleAuthorizationChangeDetail from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -102,7 +102,7 @@ class CreateResaleAuthorizationChangeDetail(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateResaleAuthorizationChangeDetail from a dict"""
+        """Create an instance of CreateResaleAuthorizationUsingResaleAuthorizationChangeDetail from a dict"""
         if obj is None:
             return None
 
@@ -112,7 +112,7 @@ class CreateResaleAuthorizationChangeDetail(BaseModel):
         _obj = cls.model_validate({
             "Name": obj.get("Name"),
             "Description": obj.get("Description"),
-            "ProductId": obj.get("ProductId"),
+            "ResaleAuthorizationId": obj.get("ResaleAuthorizationId"),
             "ResellerAccountId": obj.get("ResellerAccountId"),
             "ResellerRole": obj.get("ResellerRole")
         })
