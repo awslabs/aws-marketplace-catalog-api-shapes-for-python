@@ -17,20 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.buyer_account import BuyerAccount
-from aws_marketplace_catalog_shapes_resaleauthorization_1_0_entitytype.models.partner_account import PartnerAccount
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PositiveTargeting(BaseModel):
+class PartnerAccount(BaseModel):
     """
-    PositiveTargeting
+    PartnerAccount
     """ # noqa: E501
-    buyer_accounts: Optional[List[BuyerAccount]] = Field(default=None, alias="BuyerAccounts")
-    partner_accounts: Optional[List[PartnerAccount]] = Field(default=None, alias="PartnerAccounts")
-    __properties: ClassVar[List[str]] = ["BuyerAccounts", "PartnerAccounts"]
+    aws_account_id: Optional[StrictStr] = Field(default=None, alias="AwsAccountId")
+    legal_name: Optional[StrictStr] = Field(default=None, alias="LegalName")
+    __properties: ClassVar[List[str]] = ["AwsAccountId", "LegalName"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +48,7 @@ class PositiveTargeting(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PositiveTargeting from a JSON string"""
+        """Create an instance of PartnerAccount from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,25 +69,11 @@ class PositiveTargeting(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in buyer_accounts (list)
-        _items = []
-        if self.buyer_accounts:
-            for _item_buyer_accounts in self.buyer_accounts:
-                if _item_buyer_accounts:
-                    _items.append(_item_buyer_accounts.to_dict())
-            _dict['BuyerAccounts'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in partner_accounts (list)
-        _items = []
-        if self.partner_accounts:
-            for _item_partner_accounts in self.partner_accounts:
-                if _item_partner_accounts:
-                    _items.append(_item_partner_accounts.to_dict())
-            _dict['PartnerAccounts'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PositiveTargeting from a dict"""
+        """Create an instance of PartnerAccount from a dict"""
         if obj is None:
             return None
 
@@ -97,8 +81,8 @@ class PositiveTargeting(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "BuyerAccounts": [BuyerAccount.from_dict(_item) for _item in obj["BuyerAccounts"]] if obj.get("BuyerAccounts") is not None else None,
-            "PartnerAccounts": [PartnerAccount.from_dict(_item) for _item in obj["PartnerAccounts"]] if obj.get("PartnerAccounts") is not None else None
+            "AwsAccountId": obj.get("AwsAccountId"),
+            "LegalName": obj.get("LegalName")
         })
         return _obj
 

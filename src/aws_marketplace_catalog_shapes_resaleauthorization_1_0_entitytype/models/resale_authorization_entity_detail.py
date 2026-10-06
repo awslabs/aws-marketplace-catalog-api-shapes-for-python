@@ -34,10 +34,12 @@ class ResaleAuthorizationEntityDetail(BaseModel):
     name: Optional[StrictStr] = Field(default=None, alias="Name")
     description: Optional[StrictStr] = Field(default=None, alias="Description")
     product_id: Optional[StrictStr] = Field(default=None, alias="ProductId")
+    product_arn: Optional[StrictStr] = Field(default=None, alias="ProductArn")
     product_name: Optional[StrictStr] = Field(default=None, alias="ProductName")
     pricing_model: Optional[StrictStr] = Field(default=None, alias="PricingModel")
     status: Optional[StrictStr] = Field(default=None, alias="Status")
     pre_existing_buyer_agreement: Optional[PreExistingBuyerAgreement] = Field(default=None, alias="PreExistingBuyerAgreement")
+    source_authorization: Optional[StrictStr] = Field(default=None, alias="SourceAuthorization")
     dimensions: Optional[List[Dimension]] = Field(default=None, alias="Dimensions")
     offer_details: Optional[OfferDetails] = Field(default=None, alias="OfferDetails")
     terms: Optional[List[Term]] = Field(default=None, alias="Terms")
@@ -45,7 +47,9 @@ class ResaleAuthorizationEntityDetail(BaseModel):
     created_date: Optional[StrictStr] = Field(default=None, alias="CreatedDate")
     manufacturer_legal_name: Optional[StrictStr] = Field(default=None, alias="ManufacturerLegalName")
     manufacturer_account_id: Optional[StrictStr] = Field(default=None, alias="ManufacturerAccountId")
-    __properties: ClassVar[List[str]] = ["Name", "Description", "ProductId", "ProductName", "PricingModel", "Status", "PreExistingBuyerAgreement", "Dimensions", "OfferDetails", "Terms", "Rules", "CreatedDate", "ManufacturerLegalName", "ManufacturerAccountId"]
+    issuer_account_id: Optional[StrictStr] = Field(default=None, alias="IssuerAccountId")
+    issuer_legal_name: Optional[StrictStr] = Field(default=None, alias="IssuerLegalName")
+    __properties: ClassVar[List[str]] = ["Name", "Description", "ProductId", "ProductArn", "ProductName", "PricingModel", "Status", "PreExistingBuyerAgreement", "SourceAuthorization", "Dimensions", "OfferDetails", "Terms", "Rules", "CreatedDate", "ManufacturerLegalName", "ManufacturerAccountId", "IssuerAccountId", "IssuerLegalName"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -128,17 +132,21 @@ class ResaleAuthorizationEntityDetail(BaseModel):
             "Name": obj.get("Name"),
             "Description": obj.get("Description"),
             "ProductId": obj.get("ProductId"),
+            "ProductArn": obj.get("ProductArn"),
             "ProductName": obj.get("ProductName"),
             "PricingModel": obj.get("PricingModel"),
             "Status": obj.get("Status"),
             "PreExistingBuyerAgreement": PreExistingBuyerAgreement.from_dict(obj["PreExistingBuyerAgreement"]) if obj.get("PreExistingBuyerAgreement") is not None else None,
+            "SourceAuthorization": obj.get("SourceAuthorization"),
             "Dimensions": [Dimension.from_dict(_item) for _item in obj["Dimensions"]] if obj.get("Dimensions") is not None else None,
             "OfferDetails": OfferDetails.from_dict(obj["OfferDetails"]) if obj.get("OfferDetails") is not None else None,
             "Terms": [Term.from_dict(_item) for _item in obj["Terms"]] if obj.get("Terms") is not None else None,
             "Rules": [Rule.from_dict(_item) for _item in obj["Rules"]] if obj.get("Rules") is not None else None,
             "CreatedDate": obj.get("CreatedDate"),
             "ManufacturerLegalName": obj.get("ManufacturerLegalName"),
-            "ManufacturerAccountId": obj.get("ManufacturerAccountId")
+            "ManufacturerAccountId": obj.get("ManufacturerAccountId"),
+            "IssuerAccountId": obj.get("IssuerAccountId"),
+            "IssuerLegalName": obj.get("IssuerLegalName")
         })
         return _obj
 

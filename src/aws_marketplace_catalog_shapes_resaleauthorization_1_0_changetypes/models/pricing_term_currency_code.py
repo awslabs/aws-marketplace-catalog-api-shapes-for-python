@@ -31,6 +31,8 @@ class PricingTermCurrencyCode(str, Enum):
     EUR = 'EUR'
     GBP = 'GBP'
     JPY = 'JPY'
+    CAD = 'CAD'
+    INR = 'INR'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

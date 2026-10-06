@@ -33,7 +33,8 @@ class Rule(BaseModel):
     offers_max_quantity: Optional[StrictInt] = Field(default=None, alias="OffersMaxQuantity")
     reseller_account_id: Optional[StrictStr] = Field(default=None, alias="ResellerAccountId")
     reseller_legal_name: Optional[StrictStr] = Field(default=None, alias="ResellerLegalName")
-    __properties: ClassVar[List[str]] = ["Type", "Id", "Usage", "AvailabilityEndDate", "OffersMaxQuantity", "ResellerAccountId", "ResellerLegalName"]
+    reseller_role: Optional[StrictStr] = Field(default=None, alias="ResellerRole")
+    __properties: ClassVar[List[str]] = ["Type", "Id", "Usage", "AvailabilityEndDate", "OffersMaxQuantity", "ResellerAccountId", "ResellerLegalName", "ResellerRole"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -92,7 +93,8 @@ class Rule(BaseModel):
             "AvailabilityEndDate": obj.get("AvailabilityEndDate"),
             "OffersMaxQuantity": obj.get("OffersMaxQuantity"),
             "ResellerAccountId": obj.get("ResellerAccountId"),
-            "ResellerLegalName": obj.get("ResellerLegalName")
+            "ResellerLegalName": obj.get("ResellerLegalName"),
+            "ResellerRole": obj.get("ResellerRole")
         })
         return _obj
 
