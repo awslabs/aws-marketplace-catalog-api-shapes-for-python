@@ -17,6 +17,8 @@ def test_importable():
     from aws_marketplace_catalog_shapes_offer_1_0.models.update_validity_terms_change_detail import UpdateValidityTermsChangeDetail  # noqa: F401
     from aws_marketplace_catalog_shapes_offer_1_0.models.create_offer_using_resale_authorization_change_detail import CreateOfferUsingResaleAuthorizationChangeDetail  # noqa: F401
     from aws_marketplace_catalog_shapes_offer_1_0.models.create_replacement_offer_using_resale_authorization_change_detail import CreateReplacementOfferUsingResaleAuthorizationChangeDetail  # noqa: F401
+    from aws_marketplace_catalog_shapes_offer_1_0.models.create_offer_using_subsidiary_authorization_change_detail import CreateOfferUsingSubsidiaryAuthorizationChangeDetail  # noqa: F401
+    from aws_marketplace_catalog_shapes_offer_1_0.models.create_replacement_offer_using_subsidiary_authorization_change_detail import CreateReplacementOfferUsingSubsidiaryAuthorizationChangeDetail  # noqa: F401
     from aws_marketplace_catalog_shapes_offer_1_0.models.update_markup_change_detail import UpdateMarkupChangeDetail  # noqa: F401
 
     assert True
@@ -879,6 +881,38 @@ def test_create_replacement_offer_using_resale_authorization_change_detail_seria
     }
 
     assert actual_json == json.dumps(expected_json), "Generated CreateReplacementOfferUsingResaleAuthorizationChangeDetail does not match expected json"
+
+def test_create_offer_using_subsidiary_authorization_change_detail_serialization():
+    from aws_marketplace_catalog_shapes_offer_1_0.models.create_offer_using_subsidiary_authorization_change_detail import CreateOfferUsingSubsidiaryAuthorizationChangeDetail
+
+    create_offer_using_subsidiary_authorization_change_detail = CreateOfferUsingSubsidiaryAuthorizationChangeDetail(
+        subsidiary_authorization_id="subauthz-1234567890123",
+        name="name"
+    )
+    actual_json = create_offer_using_subsidiary_authorization_change_detail.to_json()
+    expected_json = {
+        "SubsidiaryAuthorizationId": "subauthz-1234567890123",
+        "Name": "name"
+    }
+
+    assert actual_json == json.dumps(expected_json), "Generated CreateOfferUsingSubsidiaryAuthorizationChangeDetail does not match expected json"
+
+def test_create_replacement_offer_using_subsidiary_authorization_change_detail_serialization():
+    from aws_marketplace_catalog_shapes_offer_1_0.models.create_replacement_offer_using_subsidiary_authorization_change_detail import CreateReplacementOfferUsingSubsidiaryAuthorizationChangeDetail
+
+    create_replacement_offer_using_subsidiary_authorization_change_detail = CreateReplacementOfferUsingSubsidiaryAuthorizationChangeDetail(
+        subsidiary_authorization_id="subauthz-1234567890123",
+        agreement_id="agmt-12345",
+        name="name"
+    )
+    actual_json = create_replacement_offer_using_subsidiary_authorization_change_detail.to_json()
+    expected_json = {
+        "SubsidiaryAuthorizationId": "subauthz-1234567890123",
+        "AgreementId": "agmt-12345",
+        "Name": "name"
+    }
+
+    assert actual_json == json.dumps(expected_json), "Generated CreateReplacementOfferUsingSubsidiaryAuthorizationChangeDetail does not match expected json"
 
 def test_update_markup_change_detail_serialization():
     from aws_marketplace_catalog_shapes_offer_1_0.models.update_markup_change_detail import UpdateMarkupChangeDetail
