@@ -38,7 +38,8 @@ class OfferEntityDetail(BaseModel):
     product_id: Optional[StrictStr] = Field(default=None, alias="ProductId")
     rules: Optional[List[Rule]] = Field(default=None, alias="Rules")
     terms: Optional[List[Term]] = Field(default=None, alias="Terms")
-    __properties: ClassVar[List[str]] = ["Description", "Id", "State", "MarkupPercentage", "Name", "PreExistingAgreement", "ProductId", "Rules", "Terms"]
+    subsidiary_authorization_id: Optional[StrictStr] = Field(default=None, alias="SubsidiaryAuthorizationId")
+    __properties: ClassVar[List[str]] = ["Description", "Id", "State", "MarkupPercentage", "Name", "PreExistingAgreement", "ProductId", "Rules", "Terms", "SubsidiaryAuthorizationId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -116,7 +117,8 @@ class OfferEntityDetail(BaseModel):
             "PreExistingAgreement": PreExistingAgreement.from_dict(obj["PreExistingAgreement"]) if obj.get("PreExistingAgreement") is not None else None,
             "ProductId": obj.get("ProductId"),
             "Rules": [Rule.from_dict(_item) for _item in obj["Rules"]] if obj.get("Rules") is not None else None,
-            "Terms": [Term.from_dict(_item) for _item in obj["Terms"]] if obj.get("Terms") is not None else None
+            "Terms": [Term.from_dict(_item) for _item in obj["Terms"]] if obj.get("Terms") is not None else None,
+            "SubsidiaryAuthorizationId": obj.get("SubsidiaryAuthorizationId")
         })
         return _obj
 

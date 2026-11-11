@@ -177,7 +177,7 @@ def test_resale_authorization_1_0_entity_detail_deserialization():
             "Id": "term_id_placeholder",
             "PositiveTargeting": {
                 "PartnerAccounts": [{
-                    "AwsAccountId": "987654321098",
+                    "AwsAccountId": "123456789123",
                     "LegalName": "Partner Account"
                 }]
             }
@@ -384,7 +384,7 @@ def test_resale_authorization_1_0_entity_detail_deserialization():
                 positive_targeting=PositiveTargeting(
                     partner_accounts=[
                         PartnerAccount(
-                            aws_account_id="987654321098",
+                            aws_account_id="123456789123",
                             legal_name="Partner Account"
                         )
                     ]
